@@ -42,12 +42,15 @@ public final class CachesCfg implements ConfigurationEntry {
   @Override
   public String toString() {
     return "CachesCfg{"
-        + "drgCacheCapacity="
+        +
+        "drgCacheCapacity="
         + drgCacheCapacity
         + ", formCacheCapacity="
         + formCacheCapacity
         + ", processCacheCapacity="
         + processCacheCapacity
-        + '}';
+        +
+        ", formCacheCapacity=" + formCacheCapacity +
+        '}';
   }
 }
