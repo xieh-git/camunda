@@ -76,6 +76,15 @@ public final class EngineConfiguration {
     return this;
   }
 
+  public int getProcessCacheCapacity() {
+    return processCacheCapacity;
+  }
+
+  public EngineConfiguration setProcessCacheCapacity(final int processCacheCapacity) {
+    this.processCacheCapacity = processCacheCapacity;
+    return this;
+  }
+
   public int getFormCacheCapacity() {
     return formCacheCapacity;
   }
