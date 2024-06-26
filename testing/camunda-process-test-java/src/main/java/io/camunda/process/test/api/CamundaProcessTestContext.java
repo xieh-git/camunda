@@ -42,10 +42,10 @@ public interface CamundaProcessTestContext {
   /**
    * @return the URI of Zeebe's gRPC API address
    */
-  URI getZeebeGrpcAddress();
+  URI getCamundaGrpcAddress();
 
   /**
    * @return the URI of Zeebe's REST API address
    */
-  URI getZeebeRestAddress();
+  URI getCamundaRestAddress();
 }

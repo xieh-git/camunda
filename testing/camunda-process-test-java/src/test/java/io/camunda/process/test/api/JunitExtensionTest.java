@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.camunda.process.test.impl.containers.ZeebeContainer;
+import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.runtime.CamundaContainerRuntime;
 import io.camunda.process.test.impl.runtime.CamundaContainerRuntimeBuilder;
 import io.camunda.zeebe.client.ZeebeClient;
@@ -49,7 +49,7 @@ public class JunitExtensionTest {
   private CamundaContainerRuntimeBuilder camundaContainerRuntimeBuilder;
 
   @Mock private CamundaContainerRuntime camundaContainerRuntime;
-  @Mock private ZeebeContainer zeebeContainer;
+  @Mock private CamundaContainer camundaContainer;
 
   @Mock private ExtensionContext extensionContext;
   @Mock private TestInstances testInstances;
@@ -62,9 +62,9 @@ public class JunitExtensionTest {
   @BeforeEach
   void configureMocks() {
     when(camundaContainerRuntimeBuilder.build()).thenReturn(camundaContainerRuntime);
-    when(camundaContainerRuntime.getZeebeContainer()).thenReturn(zeebeContainer);
-    when(zeebeContainer.getGrpcApiAddress()).thenReturn(GRPC_API_ADDRESS);
-    when(zeebeContainer.getRestApiAddress()).thenReturn(REST_API_ADDRESS);
+    when(camundaContainerRuntime.getCamundaContainer()).thenReturn(camundaContainer);
+    when(camundaContainer.getGrpcApiAddress()).thenReturn(GRPC_API_ADDRESS);
+    when(camundaContainer.getRestApiAddress()).thenReturn(REST_API_ADDRESS);
 
     when(extensionContext.getRequiredTestInstances()).thenReturn(testInstances);
     when(testInstances.getAllInstances()).thenReturn(Collections.singletonList(this));
@@ -99,8 +99,8 @@ public class JunitExtensionTest {
 
     // then
     assertThat(camundaProcessTestContext).isNotNull();
-    assertThat(camundaProcessTestContext.getZeebeGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
-    assertThat(camundaProcessTestContext.getZeebeRestAddress()).isEqualTo(REST_API_ADDRESS);
+    assertThat(camundaProcessTestContext.getCamundaGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
+    assertThat(camundaProcessTestContext.getCamundaRestAddress()).isEqualTo(REST_API_ADDRESS);
   }
 
   @Test
@@ -174,35 +174,32 @@ public class JunitExtensionTest {
   @Test
   void shouldConfigureRuntime() throws Exception {
     // given
+    final String camundaDockerImageName = "camunda-docker-image-name";
     final String camundaVersion = "camunda-version";
-    final String zeebeDockerImageName = "zeebe-docker-image-name";
-    final Map<String, String> zeebeEnvVars = new HashMap<>();
-    zeebeEnvVars.put("env-1", "test-1");
-    zeebeEnvVars.put("env-2", "test-2");
+    final Map<String, String> camundaEnvVars = new HashMap<>();
+    camundaEnvVars.put("env-1", "test-1");
+    camundaEnvVars.put("env-2", "test-2");
 
     final CamundaProcessTestExtension extension =
         new CamundaProcessTestExtension(camundaContainerRuntimeBuilder)
+            .withCamundaDockerImageName(camundaDockerImageName)
             .withCamundaVersion(camundaVersion)
-            .withZeebeDockerImageName(zeebeDockerImageName)
-            .withZeebeEnv(zeebeEnvVars)
-            .withZeebeEnv("env-3", "test-3")
-            .withZeebeExposedPort(100)
-            .withZeebeExposedPort(200);
+            .withCamundaEnv(camundaEnvVars)
+            .withCamundaEnv("env-3", "test-3")
+            .withCamundaExposedPort(100)
+            .withCamundaExposedPort(200);
 
     // when
     extension.beforeEach(extensionContext);
 
     // then
-    verify(camundaContainerRuntimeBuilder).withZeebeDockerImageVersion(camundaVersion);
-    verify(camundaContainerRuntimeBuilder).withOperateDockerImageVersion(camundaVersion);
-    verify(camundaContainerRuntimeBuilder).withTasklistDockerImageVersion(camundaVersion);
+    verify(camundaContainerRuntimeBuilder).withCamundaDockerImageName(camundaDockerImageName);
+    verify(camundaContainerRuntimeBuilder).withCamundaDockerImageVersion(camundaVersion);
 
-    verify(camundaContainerRuntimeBuilder).withZeebeDockerImageName(zeebeDockerImageName);
+    verify(camundaContainerRuntimeBuilder).withCamundaEnv(camundaEnvVars);
+    verify(camundaContainerRuntimeBuilder).withCamundaEnv("env-3", "test-3");
 
-    verify(camundaContainerRuntimeBuilder).withZeebeEnv(zeebeEnvVars);
-    verify(camundaContainerRuntimeBuilder).withZeebeEnv("env-3", "test-3");
-
-    verify(camundaContainerRuntimeBuilder).withZeebeExposedPort(100);
-    verify(camundaContainerRuntimeBuilder).withZeebeExposedPort(200);
+    verify(camundaContainerRuntimeBuilder).withCamundaExposedPort(100);
+    verify(camundaContainerRuntimeBuilder).withCamundaExposedPort(200);
   }
 }

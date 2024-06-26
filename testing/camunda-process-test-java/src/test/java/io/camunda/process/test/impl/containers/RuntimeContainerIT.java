@@ -59,7 +59,7 @@ public class RuntimeContainerIT {
 
   @BeforeAll
   static void startContainerRuntime() {
-    runtime = CamundaContainerRuntime.newBuilder().build();
+    runtime = CamundaContainerRuntime.newBuilder().withCamundaLogger("camunda").build();
     runtime.start();
   }
 
@@ -71,14 +71,14 @@ public class RuntimeContainerIT {
   @Test
   void shouldConnectWithZeebeClient() {
     // given
-    final ZeebeContainer zeebeContainer = runtime.getZeebeContainer();
+    final CamundaContainer camundaContainer = runtime.getCamundaContainer();
 
     // when
     final ZeebeClient zeebeClient =
         ZeebeClient.newClientBuilder()
             .usePlaintext()
-            .grpcAddress(zeebeContainer.getGrpcApiAddress())
-            .restAddress(zeebeContainer.getRestApiAddress())
+            .grpcAddress(camundaContainer.getGrpcApiAddress())
+            .restAddress(camundaContainer.getRestApiAddress())
             .build();
 
     // then
@@ -133,24 +133,24 @@ public class RuntimeContainerIT {
     final long processDefinitionKey = deployment.getProcesses().get(0).getProcessDefinitionKey();
 
     // when
-    final OperateContainer operateContainer = runtime.getOperateContainer();
-    final String operateRestApi =
-        "http://" + operateContainer.getHost() + ":" + operateContainer.getRestApiPort();
-    final URI operateProcessEndpoint =
-        URI.create(operateRestApi + "/v1/process-definitions/search");
+    final CamundaContainer camundaContainer = runtime.getCamundaContainer();
+    final String camundaRestApi =
+        "http://" + camundaContainer.getHost() + ":" + camundaContainer.getRestApiPort();
+    final URI camundaProcessEndpoint =
+        URI.create(camundaRestApi + "/v1/process-definitions/search");
 
     final BasicCookieStore cookieStore = new BasicCookieStore();
     final CloseableHttpClient httpClient =
         HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
-    sendLoginRequest(httpClient, operateRestApi);
+    sendLoginRequest(httpClient, camundaRestApi);
     assertThat(cookieStore.getCookies()).extracting(Cookie::getName).contains("OPERATE-SESSION");
 
     // then
     Awaitility.await()
         .untilAsserted(
             () -> {
-              final String responseBody = sendPostRequest(httpClient, operateProcessEndpoint, "{}");
+              final String responseBody = sendPostRequest(httpClient, camundaProcessEndpoint, "{}");
               assertThat(responseBody).contains("\"key\":" + processDefinitionKey);
             });
   }
@@ -171,36 +171,36 @@ public class RuntimeContainerIT {
             .getProcessInstanceKey();
 
     // when
-    final TasklistContainer tasklistContainer = runtime.getTasklistContainer();
-    final String tasklistRestApi =
-        "http://" + tasklistContainer.getHost() + ":" + tasklistContainer.getRestApiPort();
-    final URI tasklistSearchTasksEndpoint = URI.create(tasklistRestApi + "/v1/tasks/search");
+    final CamundaContainer camundaContainer = runtime.getCamundaContainer();
+    final String camundaRestApi =
+        "http://" + camundaContainer.getHost() + ":" + camundaContainer.getRestApiPort();
+    final URI camundaSearchTasksEndpoint = URI.create(camundaRestApi + "/v1/tasks/search");
     final String searchTasksFilter = "{\n  \"processInstanceKey\": \"" + processInstanceKey + "\"}";
 
     final BasicCookieStore cookieStore = new BasicCookieStore();
     final CloseableHttpClient httpClient =
         HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
-    sendLoginRequest(httpClient, tasklistRestApi);
-    assertThat(cookieStore.getCookies()).extracting(Cookie::getName).contains("TASKLIST-SESSION");
+    sendLoginRequest(httpClient, camundaRestApi);
+    assertThat(cookieStore.getCookies()).extracting(Cookie::getName).contains("OPERATE-SESSION");
 
     // then
     Awaitility.await()
         .untilAsserted(
             () -> {
               final String responseBody =
-                  sendPostRequest(httpClient, tasklistSearchTasksEndpoint, searchTasksFilter);
+                  sendPostRequest(httpClient, camundaSearchTasksEndpoint, searchTasksFilter);
               assertThat(responseBody)
                   .contains("\"processInstanceKey\" : \"" + processInstanceKey + "\"");
             });
   }
 
   private static ZeebeClient createZeebeClient(final CamundaContainerRuntime runtime) {
-    final ZeebeContainer zeebeContainer = runtime.getZeebeContainer();
+    final CamundaContainer camundaContainer = runtime.getCamundaContainer();
     return ZeebeClient.newClientBuilder()
         .usePlaintext()
-        .grpcAddress(zeebeContainer.getGrpcApiAddress())
-        .restAddress(zeebeContainer.getRestApiAddress())
+        .grpcAddress(camundaContainer.getGrpcApiAddress())
+        .restAddress(camundaContainer.getRestApiAddress())
         .build();
   }
 

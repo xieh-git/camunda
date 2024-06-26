@@ -27,15 +27,15 @@ import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.containers.wait.strategy.WaitAllStrategy.Mode;
 import org.testcontainers.utility.DockerImageName;
 
-public class ZeebeContainer extends GenericContainer<ZeebeContainer> {
+public class CamundaContainer extends GenericContainer<CamundaContainer> {
 
   private static final Duration DEFAULT_STARTUP_TIMEOUT = Duration.ofMinutes(1);
-  private static final String ZEEBE_READY_ENDPOINT = "/ready";
+  private static final String CAMUNDA_READY_ENDPOINT = "/ready";
 
   private static final String ZEEBE_ELASTICSEARCH_EXPORTER_CLASSNAME =
       "io.camunda.zeebe.exporter.ElasticsearchExporter";
 
-  public ZeebeContainer(final DockerImageName dockerImageName) {
+  public CamundaContainer(final DockerImageName dockerImageName) {
     super(dockerImageName);
     applyDefaultConfiguration();
   }
@@ -43,28 +43,49 @@ public class ZeebeContainer extends GenericContainer<ZeebeContainer> {
   private void applyDefaultConfiguration() {
     withNetwork(Network.SHARED)
         .waitingFor(newDefaultWaitStrategy())
-        .withEnv(ContainerRuntimeEnvs.ZEEBE_ENV_CLOCK_CONTROLLED, "true")
+        .withEnv(
+            ContainerRuntimeEnvs.CAMUNDA_ENV_SPRING_PROFILES_ACTIVE,
+            "operate,tasklist,broker,dev,dev-data,auth")
+        .withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_ZEEBE_CLOCK_CONTROLLED, "true")
+        .withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_TASKLIST_CSRF_PREVENTION_ENABLED, "false")
         .addExposedPorts(
-            ContainerRuntimePorts.ZEEBE_GATEWAY_API,
-            ContainerRuntimePorts.ZEEBE_COMMAND_API,
-            ContainerRuntimePorts.ZEEBE_INTERNAL_API,
-            ContainerRuntimePorts.ZEEBE_MONITORING_API,
-            ContainerRuntimePorts.ZEEBE_REST_API);
+            ContainerRuntimePorts.CAMUNDA_GATEWAY_API,
+            ContainerRuntimePorts.CAMUNDA_COMMAND_API,
+            ContainerRuntimePorts.CAMUNDA_INTERNAL_API,
+            ContainerRuntimePorts.CAMUNDA_MONITORING_API,
+            ContainerRuntimePorts.CAMUNDA_REST_API);
   }
 
-  public ZeebeContainer withElasticsearchExporter(final String url) {
+  public CamundaContainer withZeebeApi(final String networkAlias) {
+    final String zeebeGrpcApi = networkAlias + ":" + ContainerRuntimePorts.CAMUNDA_GATEWAY_API;
+    final String zeebeRestApi = networkAlias + ":" + ContainerRuntimePorts.CAMUNDA_REST_API;
+
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_OPERATE_ZEEBE_GATEWAYADDRESS, zeebeGrpcApi);
+
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_TASKLIST_ZEEBE_GATEWAYADDRESS, zeebeGrpcApi);
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_TASKLIST_ZEEBE_RESTADDRESS, zeebeRestApi);
+    return this;
+  }
+
+  public CamundaContainer withElasticsearchUrl(final String elasticsearchUrl) {
     withEnv(
-        ContainerRuntimeEnvs.ZEEBE_ENV_ELASTICSEARCH_CLASSNAME,
+        ContainerRuntimeEnvs.CAMUNDA_ENV_ZEEBE_ELASTICSEARCH_CLASSNAME,
         ZEEBE_ELASTICSEARCH_EXPORTER_CLASSNAME);
-    withEnv(ContainerRuntimeEnvs.ZEEBE_ENV_ELASTICSEARCH_ARGS_URL, url);
-    withEnv(ContainerRuntimeEnvs.ZEEBE_ENV_ELASTICSEARCH_ARGS_BULK_SIZE, "1");
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_ZEEBE_ELASTICSEARCH_ARGS_URL, elasticsearchUrl);
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_ZEEBE_ELASTICSEARCH_ARGS_BULK_SIZE, "1");
+
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_OPERATE_ELASTICSEARCH_URL, elasticsearchUrl);
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_OPERATE_ZEEBEELASTICSEARCH_URL, elasticsearchUrl);
+
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_TASKLIST_ELASTICSEARCH_URL, elasticsearchUrl);
+    withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_TASKLIST_ZEEBEELASTICSEARCH_URL, elasticsearchUrl);
     return this;
   }
 
   public static HttpWaitStrategy newDefaultBrokerReadyCheck() {
     return new HttpWaitStrategy()
-        .forPath(ZEEBE_READY_ENDPOINT)
-        .forPort(ContainerRuntimePorts.ZEEBE_MONITORING_API)
+        .forPath(CAMUNDA_READY_ENDPOINT)
+        .forPort(ContainerRuntimePorts.CAMUNDA_MONITORING_API)
         .forStatusCodeMatching(status -> status >= 200 && status < 300)
         .withReadTimeout(Duration.ofSeconds(10));
   }
@@ -77,11 +98,11 @@ public class ZeebeContainer extends GenericContainer<ZeebeContainer> {
   }
 
   public int getGrpcApiPort() {
-    return getMappedPort(ContainerRuntimePorts.ZEEBE_GATEWAY_API);
+    return getMappedPort(ContainerRuntimePorts.CAMUNDA_GATEWAY_API);
   }
 
   public int getRestApiPort() {
-    return getMappedPort(ContainerRuntimePorts.ZEEBE_REST_API);
+    return getMappedPort(ContainerRuntimePorts.CAMUNDA_REST_API);
   }
 
   public URI getGrpcApiAddress() {
