@@ -17,8 +17,12 @@ package io.camunda.client.impl;
 
 import java.util.Properties;
 import java.util.function.Consumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 final class BuilderUtils {
+
+  private static final Logger LOG = LoggerFactory.getLogger(BuilderUtils.class);
 
   private BuilderUtils() {}
 
@@ -44,6 +48,7 @@ final class BuilderUtils {
       return properties.getProperty(propertyName);
     }
     if (properties.containsKey(legacyPropertyName)) {
+      LOG.warn("{} is deprecated. Use {} instead", legacyPropertyName, propertyName);
       return properties.getProperty(legacyPropertyName);
     }
     return null;

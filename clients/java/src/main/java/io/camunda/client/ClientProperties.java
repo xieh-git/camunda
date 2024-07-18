@@ -86,77 +86,77 @@ public final class ClientProperties {
   /**
    * @see CamundaClientBuilder#defaultJobPollInterval(Duration)
    */
-  public static final String DEFAULT_JOB_POLL_INTERVAL = "client.zeebe.job.pollinterval";
+  public static final String DEFAULT_JOB_POLL_INTERVAL = "camunda.client.job.pollinterval";
 
   /**
    * @see CamundaClientBuilder#defaultMessageTimeToLive(Duration)
    */
-  public static final String DEFAULT_MESSAGE_TIME_TO_LIVE = "client.zeebe.message.timeToLive";
+  public static final String DEFAULT_MESSAGE_TIME_TO_LIVE = "camunda.client.message.timeToLive";
 
   /**
    * @see CamundaClientBuilder#defaultRequestTimeout(Duration)
    */
-  public static final String DEFAULT_REQUEST_TIMEOUT = "client.zeebe.requestTimeout";
+  public static final String DEFAULT_REQUEST_TIMEOUT = "camunda.client.requestTimeout";
 
   /**
    * @see CamundaClientBuilder#usePlaintext()
    */
-  public static final String USE_PLAINTEXT_CONNECTION = "client.zeebe.security.plaintext";
+  public static final String USE_PLAINTEXT_CONNECTION = "camunda.client.security.plaintext";
 
   /**
    * @see CamundaClientBuilder#caCertificatePath(String)
    */
-  public static final String CA_CERTIFICATE_PATH = "client.zeebe.security.certpath";
+  public static final String CA_CERTIFICATE_PATH = "camunda.client.security.certpath";
 
   /**
    * @see CamundaClientBuilder#keepAlive(Duration)
    */
-  public static final String KEEP_ALIVE = "client.zeebe.keepalive";
+  public static final String KEEP_ALIVE = "camunda.client.keepalive";
 
   /**
    * @see CamundaClientBuilder#overrideAuthority(String)
    */
-  public static final String OVERRIDE_AUTHORITY = "client.zeebe.overrideauthority";
+  public static final String OVERRIDE_AUTHORITY = "camunda.client.overrideauthority";
 
   /**
    * @see CamundaClientBuilder#maxMessageSize(int) (String)
    */
-  public static final String MAX_MESSAGE_SIZE = "client.zeebe.maxMessageSize";
+  public static final String MAX_MESSAGE_SIZE = "camunda.client.maxMessageSize";
 
   /**
    * @see CamundaClientBuilder#maxMetadataSize(int)
    */
-  public static final String MAX_METADATA_SIZE = "client.zeebe.maxMetadataSize";
+  public static final String MAX_METADATA_SIZE = "camunda.client.maxMetadataSize";
 
   /**
    * @see CamundaClientCloudBuilderStep1#withClusterId(String)
    */
-  public static final String CLOUD_CLUSTER_ID = "client.zeebe.cloud.clusterId";
+  public static final String CLOUD_CLUSTER_ID = "camunda.client.cloud.clusterId";
 
   /**
    * @see CamundaClientCloudBuilderStep2#withClientId(String)
    */
-  public static final String CLOUD_CLIENT_ID = "client.zeebe.cloud.clientId";
+  public static final String CLOUD_CLIENT_ID = "camunda.client.cloud.clientId";
 
   /**
    * @see CamundaClientCloudBuilderStep3#withClientSecret( String)
    */
-  public static final String CLOUD_CLIENT_SECRET = "client.zeebe.cloud.secret";
+  public static final String CLOUD_CLIENT_SECRET = "camunda.client.cloud.secret";
 
   /**
    * @see CamundaClientCloudBuilderStep4#withRegion(String)
    */
-  public static final String CLOUD_REGION = "client.zeebe.cloud.region";
+  public static final String CLOUD_REGION = "camunda.client.cloud.region";
 
   /**
    * @see CamundaClientBuilder#defaultJobWorkerStreamEnabled(boolean)
    */
-  public static final String STREAM_ENABLED = "client.zeebe.worker.stream.enabled";
+  public static final String STREAM_ENABLED = "camunda.client.worker.stream.enabled";
 
   /**
    * @see CamundaClientBuilder#useDefaultRetryPolicy(boolean)
    */
-  public static final String USE_DEFAULT_RETRY_POLICY = "client.zeebe.useDefaultRetryPolicy";
+  public static final String USE_DEFAULT_RETRY_POLICY = "camunda.client.useDefaultRetryPolicy";
 
   private ClientProperties() {}
 }
