@@ -11,6 +11,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer;
 import io.camunda.zeebe.protocol.impl.stream.job.ActivatedJob;
 import io.camunda.zeebe.protocol.impl.stream.job.JobActivationProperties;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -75,7 +76,7 @@ public class RecordingJobStreamer implements JobStreamer {
     }
 
     public List<ActivatedJob> getActivatedJobs() {
-      return activatedJobs;
+      return Collections.synchronizedList(activatedJobs);
     }
 
     public void clearActivatedJobs() {
