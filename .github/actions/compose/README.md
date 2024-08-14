@@ -2,7 +2,7 @@
 
 ## Intro
 
-The action is used ease the use of docker-compose for running depdencies like cambpm or elasticsearch for tests. Based on the a provided compose file it launches its contents and blocks GHA till the containers are considered healthy.
+The action is used ease the use of docker-compose for running dependencies like elasticsearch for tests. Based on the provided compose file it launches its contents and blocks GHA until the containers are considered healthy.
 
 It also allows running multiple instances of elasticsearch by defining a project_name.
 
@@ -21,15 +21,6 @@ Using the `env` directive allows configuring variables within the docker-compose
 
 ```yaml
 steps:
-- uses: actions/checkout@v3
-- name: Start Cambpm
-  uses: ./.github/actions/compose
-  with:
-    compose_file: .github/actions/compose/docker-compose.cambpm.yml
-    project_name: cambpm
-  env:
-    CAMBPM_VERSION: 7.19.0
-    CAMBPM_JVM_MEMORY: 1
 - name: Start Elastic - Old
   uses: ./.github/actions/compose
   with:
@@ -45,7 +36,7 @@ steps:
     compose_file: .github/actions/compose/docker-compose.elasticsearch.yml
     project_name: elasticsearch-new
   env:
-    ELASTIC_VERSION: 7.10.0
+    ELASTIC_VERSION: 8.9.0
     ELASTIC_JVM_MEMORY: 1
     ELASTIC_HTTP_PORT: 9200
 ```
