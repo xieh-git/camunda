@@ -30,5 +30,4 @@ public class AlertCreationRequestDto {
   private boolean fixNotification;
   private AlertInterval reminder;
   private List<String> emails = new ArrayList<>();
-  private String webhook;
 }
