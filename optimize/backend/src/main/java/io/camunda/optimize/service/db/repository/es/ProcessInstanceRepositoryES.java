@@ -46,8 +46,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -60,18 +58,29 @@ import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.xcontent.XContentType;
+import org.slf4j.Logger;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
-@RequiredArgsConstructor
 @Conditional(ElasticSearchCondition.class)
 class ProcessInstanceRepositoryES implements ProcessInstanceRepository {
+
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
+      ProcessInstanceRepositoryES.class);
   private final ConfigurationService configurationService;
   private final OptimizeElasticsearchClient esClient;
   private final ObjectMapper objectMapper;
   private final DateTimeFormatter dateTimeFormatter;
+
+  public ProcessInstanceRepositoryES(ConfigurationService configurationService,
+      OptimizeElasticsearchClient esClient, ObjectMapper objectMapper,
+      DateTimeFormatter dateTimeFormatter) {
+    this.configurationService = configurationService;
+    this.esClient = esClient;
+    this.objectMapper = objectMapper;
+    this.dateTimeFormatter = dateTimeFormatter;
+  }
 
   @Override
   public void deleteByIds(

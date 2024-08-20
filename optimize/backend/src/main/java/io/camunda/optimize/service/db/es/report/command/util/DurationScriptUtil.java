@@ -20,12 +20,11 @@ import io.camunda.optimize.dto.optimize.query.report.single.process.filter.data.
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.elasticsearch.script.Script;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DurationScriptUtil {
+
+  private DurationScriptUtil() {}
 
   public static Script getDurationScript(
       final long currRequestDateInMs,

@@ -65,8 +65,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -93,18 +91,27 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.ScriptSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.slf4j.Logger;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
-@Slf4j
 @Component
 @Conditional(ElasticSearchCondition.class)
 public class DefinitionReaderES implements DefinitionReader {
 
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(DefinitionReaderES.class);
   private final OptimizeElasticsearchClient esClient;
   private final ConfigurationService configurationService;
   private final ObjectMapper objectMapper;
+
+  public DefinitionReaderES(
+      final OptimizeElasticsearchClient esClient,
+      final ConfigurationService configurationService,
+      final ObjectMapper objectMapper) {
+    this.esClient = esClient;
+    this.configurationService = configurationService;
+    this.objectMapper = objectMapper;
+  }
 
   @Override
   public Optional<DefinitionWithTenantIdsDto> getDefinitionWithAvailableTenants(

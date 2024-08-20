@@ -13,16 +13,16 @@ import static io.camunda.optimize.upgrade.os.OpenSearchClientBuilder.getCurrentO
 import com.vdurmont.semver4j.Semver;
 import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import java.io.IOException;
-import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.opensearch.client.opensearch.OpenSearchClient;
+import org.slf4j.Logger;
 
-@Slf4j
 public class DatabaseVersionChecker {
 
   public static final String MIN_ES_SUPPORTED_VERSION = "8.13.0";
   public static final String MIN_OS_SUPPORTED_VERSION = "2.9.0";
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(DatabaseVersionChecker.class);
 
   public static void checkESVersionSupport(
       final RestHighLevelClient esClient, final RequestOptions requestOptions) throws IOException {

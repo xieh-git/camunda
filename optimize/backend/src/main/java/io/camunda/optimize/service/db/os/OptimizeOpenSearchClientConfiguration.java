@@ -12,21 +12,30 @@ import io.camunda.optimize.service.db.schema.OptimizeIndexNameService;
 import io.camunda.optimize.service.util.BackoffCalculator;
 import io.camunda.optimize.service.util.configuration.ConfigurationService;
 import io.camunda.optimize.service.util.configuration.condition.OpenSearchCondition;
-import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@AllArgsConstructor
-@Slf4j
 @Conditional(OpenSearchCondition.class)
 public class OptimizeOpenSearchClientConfiguration {
+
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(OptimizeOpenSearchClientConfiguration.class);
   private final ConfigurationService configurationService;
   private final OptimizeIndexNameService optimizeIndexNameService;
   private final OpenSearchSchemaManager openSearchSchemaManager;
+
+  public OptimizeOpenSearchClientConfiguration(
+      final ConfigurationService configurationService,
+      final OptimizeIndexNameService optimizeIndexNameService,
+      final OpenSearchSchemaManager openSearchSchemaManager) {
+    this.configurationService = configurationService;
+    this.optimizeIndexNameService = optimizeIndexNameService;
+    this.openSearchSchemaManager = openSearchSchemaManager;
+  }
 
   @Bean(destroyMethod = "close")
   public OptimizeOpenSearchClient optimizeOpenSearchClient(
@@ -34,10 +43,16 @@ public class OptimizeOpenSearchClientConfiguration {
     return createOptimizeOpenSearchClient(backoffCalculator);
   }
 
-  @SneakyThrows
   public OptimizeOpenSearchClient createOptimizeOpenSearchClient(
       final BackoffCalculator backoffCalculator) {
-    return OptimizeOpenSearchClientFactory.create(
-        configurationService, optimizeIndexNameService, openSearchSchemaManager, backoffCalculator);
+    try {
+      return OptimizeOpenSearchClientFactory.create(
+          configurationService,
+          optimizeIndexNameService,
+          openSearchSchemaManager,
+          backoffCalculator);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

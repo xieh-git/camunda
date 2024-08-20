@@ -25,8 +25,6 @@ import io.camunda.optimize.service.db.schema.index.ProcessInstanceIndex;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -38,11 +36,12 @@ import org.elasticsearch.search.aggregations.bucket.nested.NestedAggregationBuil
 import org.elasticsearch.search.aggregations.metrics.ScriptedMetric;
 import org.elasticsearch.search.aggregations.metrics.ScriptedMetricAggregationBuilder;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProcessPartQueryUtil {
 
   private static final String SCRIPT_AGGREGATION = "scriptAggregation";
   private static final String NESTED_AGGREGATION = "nestedAggregation";
+
+  private ProcessPartQueryUtil() {}
 
   public static Aggregations getProcessPartAggregations(final Aggregations aggs) {
     return ((Nested) aggs.get(NESTED_AGGREGATION)).getAggregations();
@@ -50,8 +49,8 @@ public class ProcessPartQueryUtil {
 
   public static Double getProcessPartAggregationResult(
       final Aggregations aggs, final AggregationDto aggregationType) {
-    Nested nested = aggs.get(NESTED_AGGREGATION);
-    ScriptedMetric scriptedMetric =
+    final Nested nested = aggs.get(NESTED_AGGREGATION);
+    final ScriptedMetric scriptedMetric =
         nested.getAggregations().get(getScriptAggregationName(aggregationType));
 
     if (scriptedMetric.aggregation() instanceof Number) {
@@ -65,7 +64,7 @@ public class ProcessPartQueryUtil {
       final BoolQueryBuilder boolQueryBuilder,
       final String startFlowNodeId,
       final String endFlowNodeId) {
-    String termPath =
+    final String termPath =
         ProcessInstanceIndex.FLOW_NODE_INSTANCES + "." + ProcessInstanceIndex.FLOW_NODE_ID;
     boolQueryBuilder.must(
         nestedQuery(

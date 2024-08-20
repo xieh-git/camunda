@@ -52,7 +52,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.StreamSupport;
-import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse;
@@ -64,17 +63,22 @@ import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.xcontent.XContentBuilder;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 @Conditional(ElasticSearchCondition.class)
 public class ElasticSearchSchemaManager
     extends DatabaseSchemaManager<OptimizeElasticsearchClient, XContentBuilder> {
+
   public static final int INDEX_EXIST_BATCH_SIZE = 10;
   private static final String INDEX_READ_ONLY_SETTING = "index.blocks.read_only_allow_delete";
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(ElasticSearchSchemaManager.class);
+
+
   protected final ElasticSearchMetadataService metadataService;
 
   @Autowired

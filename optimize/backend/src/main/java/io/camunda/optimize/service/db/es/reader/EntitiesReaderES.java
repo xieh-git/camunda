@@ -57,8 +57,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.get.MultiGetItemResponse;
 import org.elasticsearch.action.get.MultiGetRequest;
@@ -72,20 +70,33 @@ import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuil
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.slf4j.Logger;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
-@Slf4j
 @Conditional(ElasticSearchCondition.class)
 public class EntitiesReaderES implements EntitiesReader {
 
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(EntitiesReaderES.class);
   private final OptimizeElasticsearchClient esClient;
   private final ConfigurationService configurationService;
   private final OptimizeIndexNameService optimizeIndexNameService;
   private final LocalizationService localizationService;
   private final ObjectMapper objectMapper;
+
+  public EntitiesReaderES(
+      final OptimizeElasticsearchClient esClient,
+      final ConfigurationService configurationService,
+      final OptimizeIndexNameService optimizeIndexNameService,
+      final LocalizationService localizationService,
+      final ObjectMapper objectMapper) {
+    this.esClient = esClient;
+    this.configurationService = configurationService;
+    this.optimizeIndexNameService = optimizeIndexNameService;
+    this.localizationService = localizationService;
+    this.objectMapper = objectMapper;
+  }
 
   @Override
   public List<CollectionEntity> getAllPrivateEntities() {

@@ -20,6 +20,7 @@ import io.camunda.optimize.dto.optimize.query.report.single.process.distributed.
 import io.camunda.optimize.dto.optimize.query.report.single.process.view.ProcessViewEntity;
 import io.camunda.optimize.service.db.es.report.command.exec.ExecutionContext;
 import io.camunda.optimize.service.db.es.report.command.modules.result.CompositeCommandResult;
+import io.camunda.optimize.service.db.es.report.command.modules.result.CompositeCommandResult.ViewResult;
 import io.camunda.optimize.service.db.es.report.command.modules.view.process.duration.ProcessViewUserTaskDuration;
 import io.camunda.optimize.service.db.es.report.command.modules.view.process.frequency.ProcessViewFrequency;
 import io.camunda.optimize.service.db.reader.ProcessDefinitionReader;
@@ -33,9 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
@@ -49,7 +47,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessDistributedByProcess extends ProcessDistributedByPart {
 
@@ -60,6 +57,13 @@ public class ProcessDistributedByProcess extends ProcessDistributedByPart {
 
   private final ConfigurationService configurationService;
   private final ProcessDefinitionReader processDefinitionReader;
+
+  public ProcessDistributedByProcess(
+      final ConfigurationService configurationService,
+      final ProcessDefinitionReader processDefinitionReader) {
+    this.configurationService = configurationService;
+    this.processDefinitionReader = processDefinitionReader;
+  }
 
   @Override
   public List<AggregationBuilder> createAggregations(
@@ -348,13 +352,45 @@ public class ProcessDistributedByProcess extends ProcessDistributedByPart {
     return context.getReportData().getView().getEntity() == ProcessViewEntity.PROCESS_INSTANCE;
   }
 
-  @AllArgsConstructor
-  @Getter
   private static class ProcessBucket {
+
     private final String procDefKey;
     private final String version;
     private final String tenant;
     private final long docCount;
     private final CompositeCommandResult.ViewResult result;
+
+    public ProcessBucket(
+        final String procDefKey,
+        final String version,
+        final String tenant,
+        final long docCount,
+        final ViewResult result) {
+      this.procDefKey = procDefKey;
+      this.version = version;
+      this.tenant = tenant;
+      this.docCount = docCount;
+      this.result = result;
+    }
+
+    public String getProcDefKey() {
+      return procDefKey;
+    }
+
+    public String getVersion() {
+      return version;
+    }
+
+    public String getTenant() {
+      return tenant;
+    }
+
+    public long getDocCount() {
+      return docCount;
+    }
+
+    public ViewResult getResult() {
+      return result;
+    }
   }
 }

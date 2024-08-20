@@ -25,23 +25,34 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.Delegate;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ListIterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@AllArgsConstructor
-@Slf4j
 @Path(INGESTION_PATH)
 @Component
 public class IngestionRestService {
+
   public static final String INGESTION_PATH = "/ingestion";
   public static final String VARIABLE_SUB_PATH = "/variable";
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(IngestionRestService.class);
 
   private final ExternalVariableService externalVariableService;
+
+  public IngestionRestService(final ExternalVariableService externalVariableService) {
+    this.externalVariableService = externalVariableService;
+  }
 
   @POST
   @Path(VARIABLE_SUB_PATH)
@@ -65,9 +76,246 @@ public class IngestionRestService {
     }
   }
 
-  @Data
   private static class ValidList<E> implements List<E> {
 
-    @Delegate private List<E> list = new ArrayList<>();
+    private List<E> list = new ArrayList<>();
+
+    public ValidList() {}
+
+    public List<E> getList() {
+      return list;
+    }
+
+    public void setList(final List<E> list) {
+      this.list = list;
+    }
+
+    protected boolean canEqual(final Object other) {
+      return other instanceof ValidList;
+    }
+
+    @Override
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $list = getList();
+      result = result * PRIME + ($list == null ? 43 : $list.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (!(o instanceof ValidList)) {
+        return false;
+      }
+      final ValidList<?> other = (ValidList<?>) o;
+      if (!other.canEqual((Object) this)) {
+        return false;
+      }
+      final Object this$list = getList();
+      final Object other$list = other.getList();
+      if (this$list == null ? other$list != null : !this$list.equals(other$list)) {
+        return false;
+      }
+      return true;
+    }
+
+    @Override
+    public String toString() {
+      return "IngestionRestService.ValidList(list=" + getList() + ")";
+    }
+
+    @Override
+    public int size() {
+      return list.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return list.isEmpty();
+    }
+
+    @Override
+    public boolean contains(final Object o) {
+      return list.contains(o);
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+      return list.iterator();
+    }
+
+    @Override
+    public Object[] toArray() {
+      return list.toArray();
+    }
+
+    @Override
+    public <T> T[] toArray(final T[] a) {
+      return list.toArray(a);
+    }
+
+    @Override
+    public boolean add(final E e) {
+      return list.add(e);
+    }
+
+    @Override
+    public boolean remove(final Object o) {
+      return list.remove(o);
+    }
+
+    @Override
+    public boolean containsAll(final Collection<?> c) {
+      return list.containsAll(c);
+    }
+
+    @Override
+    public boolean addAll(final Collection<? extends E> c) {
+      return list.addAll(c);
+    }
+
+    @Override
+    public boolean addAll(final int index, final Collection<? extends E> c) {
+      return list.addAll(index, c);
+    }
+
+    @Override
+    public boolean removeAll(final Collection<?> c) {
+      return list.removeAll(c);
+    }
+
+    @Override
+    public boolean retainAll(final Collection<?> c) {
+      return list.retainAll(c);
+    }
+
+    @Override
+    public void replaceAll(final UnaryOperator<E> operator) {
+      list.replaceAll(operator);
+    }
+
+    @Override
+    public void sort(final Comparator<? super E> c) {
+      list.sort(c);
+    }
+
+    @Override
+    public void clear() {
+      list.clear();
+    }
+
+    @Override
+    public E get(final int index) {
+      return list.get(index);
+    }
+
+    @Override
+    public E set(final int index, final E element) {
+      return list.set(index, element);
+    }
+
+    @Override
+    public void add(final int index, final E element) {
+      list.add(index, element);
+    }
+
+    @Override
+    public E remove(final int index) {
+      return list.remove(index);
+    }
+
+    @Override
+    public int indexOf(final Object o) {
+      return list.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(final Object o) {
+      return list.lastIndexOf(o);
+    }
+
+    @Override
+    public ListIterator<E> listIterator() {
+      return list.listIterator();
+    }
+
+    @Override
+    public ListIterator<E> listIterator(final int index) {
+      return list.listIterator(index);
+    }
+
+    @Override
+    public List<E> subList(final int fromIndex, final int toIndex) {
+      return list.subList(fromIndex, toIndex);
+    }
+
+    @Override
+    public Spliterator<E> spliterator() {
+      return list.spliterator();
+    }
+
+    @Override
+    public void addFirst(final E e) {
+      list.addFirst(e);
+    }
+
+    @Override
+    public void addLast(final E e) {
+      list.addLast(e);
+    }
+
+    @Override
+    public E getFirst() {
+      return list.getFirst();
+    }
+
+    @Override
+    public E getLast() {
+      return list.getLast();
+    }
+
+    @Override
+    public E removeFirst() {
+      return list.removeFirst();
+    }
+
+    @Override
+    public E removeLast() {
+      return list.removeLast();
+    }
+
+    @Override
+    public List<E> reversed() {
+      return list.reversed();
+    }
+
+    @Override
+    public <T> T[] toArray(final IntFunction<T[]> generator) {
+      return list.toArray(generator);
+    }
+
+    @Override
+    public boolean removeIf(final Predicate<? super E> filter) {
+      return list.removeIf(filter);
+    }
+
+    @Override
+    public Stream<E> stream() {
+      return list.stream();
+    }
+
+    @Override
+    public Stream<E> parallelStream() {
+      return list.parallelStream();
+    }
+
+    @Override
+    public void forEach(final Consumer<? super E> action) {
+      list.forEach(action);
+    }
   }
 }

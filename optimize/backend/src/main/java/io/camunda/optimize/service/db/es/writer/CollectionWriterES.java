@@ -38,8 +38,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.DocWriteResponse;
@@ -53,18 +51,25 @@ import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.xcontent.XContentType;
+import org.slf4j.Logger;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @Component
-@Slf4j
 @Conditional(ElasticSearchCondition.class)
 public class CollectionWriterES implements CollectionWriter {
 
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(CollectionWriterES.class);
   private final OptimizeElasticsearchClient esClient;
   private final ObjectMapper objectMapper;
   private final DateTimeFormatter formatter;
+
+  public CollectionWriterES(OptimizeElasticsearchClient esClient, ObjectMapper objectMapper,
+      DateTimeFormatter formatter) {
+    this.esClient = esClient;
+    this.objectMapper = objectMapper;
+    this.formatter = formatter;
+  }
 
   @Override
   public void updateCollection(final CollectionDefinitionUpdateDto collection, final String id) {

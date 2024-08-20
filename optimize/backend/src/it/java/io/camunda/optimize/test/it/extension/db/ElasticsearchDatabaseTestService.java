@@ -35,6 +35,7 @@ import static org.elasticsearch.search.aggregations.AggregationBuilders.count;
 import static org.elasticsearch.search.aggregations.AggregationBuilders.nested;
 import static org.elasticsearch.xcontent.XContentFactory.jsonBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Iterables;
 import io.camunda.optimize.dto.optimize.OptimizeDto;
 import io.camunda.optimize.dto.optimize.index.TimestampBasedImportIndexDto;
@@ -81,8 +82,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.utils.StringUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.cluster.settings.ClusterUpdateSettingsRequest;
@@ -121,8 +120,8 @@ import org.elasticsearch.xcontent.ToXContent;
 import org.elasticsearch.xcontent.XContentBuilder;
 import org.elasticsearch.xcontent.XContentType;
 import org.mockserver.integration.ClientAndServer;
+import org.slf4j.Logger;
 
-@Slf4j
 public class ElasticsearchDatabaseTestService extends DatabaseTestService {
 
   private static final ToXContent.Params XCONTENT_PARAMS_FLAT_SETTINGS =
@@ -130,6 +129,8 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   private static final String MOCKSERVER_CLIENT_KEY = "MockServer";
   private static final Map<String, OptimizeElasticsearchClient> CLIENT_CACHE = new HashMap<>();
   private static final ClientAndServer mockServerClient = initMockServer();
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
+      ElasticsearchDatabaseTestService.class);
 
   private String elasticsearchDatabaseVersion;
 
@@ -280,13 +281,16 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     }
   }
 
-  @SneakyThrows
   @Override
   public void deleteAllIndicesContainingTerm(final String indexTerm) {
-    final String[] indicesToDelete =
-        getOptimizeElasticClient().getAllIndexNames().stream()
-            .filter(index -> index.contains(indexTerm))
-            .toArray(String[]::new);
+    final String[] indicesToDelete;
+    try {
+      indicesToDelete = getOptimizeElasticClient().getAllIndexNames().stream()
+          .filter(index -> index.contains(indexTerm))
+          .toArray(String[]::new);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     if (indicesToDelete.length > 0) {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
     }
@@ -341,62 +345,71 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     getOptimizeElasticClient().deleteIndexByRawIndexNames(indexNames);
   }
 
-  @SneakyThrows
   @Override
   public void deleteIndicesStartingWithPrefix(final String term) {
-    final String[] indicesToDelete =
-        getOptimizeElasticClient().getAllIndexNames().stream()
-            .filter(
-                indexName ->
-                    indexName.startsWith(getIndexNameService().getIndexPrefix() + "-" + term))
-            .toArray(String[]::new);
+    final String[] indicesToDelete;
+    try {
+      indicesToDelete = getOptimizeElasticClient().getAllIndexNames().stream()
+          .filter(
+              indexName ->
+                  indexName.startsWith(getIndexNameService().getIndexPrefix() + "-" + term))
+          .toArray(String[]::new);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     if (indicesToDelete.length > 0) {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
     }
   }
 
-  @SneakyThrows
   @Override
   public void deleteAllZeebeRecordsForPrefix(final String zeebeRecordPrefix) {
-    final String[] indicesToDelete =
-        Arrays.stream(
-                getOptimizeElasticClient()
-                    .getHighLevelClient()
-                    .indices()
-                    .get(
-                        new GetIndexRequest("*").indicesOptions(INDICES_EXIST_OPTIONS),
-                        getOptimizeElasticClient().requestOptions())
-                    .getIndices())
-            .filter(indexName -> indexName.contains(zeebeRecordPrefix))
-            .toArray(String[]::new);
+    final String[] indicesToDelete;
+    try {
+      indicesToDelete = Arrays.stream(
+              getOptimizeElasticClient()
+                  .getHighLevelClient()
+                  .indices()
+                  .get(
+                      new GetIndexRequest("*").indicesOptions(INDICES_EXIST_OPTIONS),
+                      getOptimizeElasticClient().requestOptions())
+                  .getIndices())
+          .filter(indexName -> indexName.contains(zeebeRecordPrefix))
+          .toArray(String[]::new);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     if (indicesToDelete.length > 1) {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
     }
   }
 
-  @SneakyThrows
   @Override
   public void deleteAllOtherZeebeRecordsWithPrefix(
       final String zeebeRecordPrefix, final String recordsToKeep) {
-    final String[] indicesToDelete =
-        Arrays.stream(
-                getOptimizeElasticClient()
-                    .getHighLevelClient()
-                    .indices()
-                    .get(
-                        new GetIndexRequest("*").indicesOptions(INDICES_EXIST_OPTIONS),
-                        getOptimizeElasticClient().requestOptions())
-                    .getIndices())
-            .filter(
-                indexName ->
-                    indexName.contains(zeebeRecordPrefix) && !indexName.contains(recordsToKeep))
-            .toArray(String[]::new);
+    final String[] indicesToDelete;
+    try {
+      indicesToDelete = Arrays.stream(
+              getOptimizeElasticClient()
+                  .getHighLevelClient()
+                  .indices()
+                  .get(
+                      new GetIndexRequest("*").indicesOptions(INDICES_EXIST_OPTIONS),
+                      getOptimizeElasticClient().requestOptions())
+                  .getIndices())
+          .filter(
+              indexName ->
+                  indexName.contains(zeebeRecordPrefix) && !indexName.contains(recordsToKeep))
+          .toArray(String[]::new);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     if (indicesToDelete.length > 1) {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
     }
   }
 
-  @SneakyThrows
+
   @Override
   public void updateZeebeRecordsForPrefix(
       final String zeebeRecordPrefix, final String indexName, final String updateScript) {
@@ -411,12 +424,16 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
                     Collections.emptyMap()))
             .setMaxRetries(NUMBER_OF_RETRIES_ON_CONFLICT)
             .setRefresh(true);
-    getOptimizeElasticClient()
-        .getHighLevelClient()
-        .updateByQuery(update, getOptimizeElasticClient().requestOptions());
+    try {
+      getOptimizeElasticClient()
+          .getHighLevelClient()
+          .updateByQuery(update, getOptimizeElasticClient().requestOptions());
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  @SneakyThrows
+
   @Override
   public void updateZeebeRecordsWithPositionForPrefix(
       final String zeebeRecordPrefix,
@@ -434,12 +451,16 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
                     Collections.emptyMap()))
             .setMaxRetries(NUMBER_OF_RETRIES_ON_CONFLICT)
             .setRefresh(true);
-    getOptimizeElasticClient()
-        .getHighLevelClient()
-        .updateByQuery(update, getOptimizeElasticClient().requestOptions());
+    try {
+      getOptimizeElasticClient()
+          .getHighLevelClient()
+          .updateByQuery(update, getOptimizeElasticClient().requestOptions());
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  @SneakyThrows
+
   @Override
   public void updateZeebeRecordsOfBpmnElementTypeForPrefix(
       final String zeebeRecordPrefix,
@@ -463,12 +484,16 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
                     Collections.emptyMap()))
             .setMaxRetries(NUMBER_OF_RETRIES_ON_CONFLICT)
             .setRefresh(true);
-    getOptimizeElasticClient()
-        .getHighLevelClient()
-        .updateByQuery(update, getOptimizeElasticClient().requestOptions());
+    try {
+      getOptimizeElasticClient()
+          .getHighLevelClient()
+          .updateByQuery(update, getOptimizeElasticClient().requestOptions());
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  @SneakyThrows
+
   @Override
   public void updateUserTaskDurations(
       final String processInstanceId, final String processDefinitionKey, final long duration) {
@@ -485,7 +510,11 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
                     Collections.emptyMap()))
             .retryOnConflict(NUMBER_OF_RETRIES_ON_CONFLICT);
 
-    getOptimizeElasticClient().update(update);
+    try {
+      getOptimizeElasticClient().update(update);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -502,27 +531,39 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-  @SneakyThrows
   public boolean indexExistsCheckWithoutApplyingOptimizePrefix(final String indexName) {
     final OptimizeElasticsearchClient esClient = getOptimizeElasticClient();
-    return esClient
-        .getHighLevelClient()
-        .indices()
-        .exists(new GetIndexRequest(indexName), esClient.requestOptions());
+    try {
+      return esClient
+          .getHighLevelClient()
+          .indices()
+          .exists(new GetIndexRequest(indexName), esClient.requestOptions());
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  @SneakyThrows
+
   @Override
   public OffsetDateTime getLastImportTimestampOfTimestampBasedImportIndex(
       final String dbType, final String engine) {
     final GetRequest getRequest =
         new GetRequest(TIMESTAMP_BASED_IMPORT_INDEX_NAME)
             .id(DatabaseHelper.constructKey(dbType, engine));
-    final GetResponse response = prefixAwareRestHighLevelClient.get(getRequest);
+    final GetResponse response;
+    try {
+      response = prefixAwareRestHighLevelClient.get(getRequest);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     if (response.isExists()) {
-      return OBJECT_MAPPER
-          .readValue(response.getSourceAsString(), TimestampBasedImportIndexDto.class)
-          .getTimestampOfLastEntity();
+      try {
+        return OBJECT_MAPPER
+            .readValue(response.getSourceAsString(), TimestampBasedImportIndexDto.class)
+            .getTimestampOfLastEntity();
+      } catch (final JsonProcessingException e) {
+        throw new RuntimeException(e);
+      }
     } else {
       throw new NotFoundException(
           String.format(
@@ -545,7 +586,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-  @SneakyThrows
+
   public <T> List<T> getZeebeExportedRecordsByQuery(
       final String exportIndex, final TermsQueryContainer query, final Class<T> zeebeRecordClass) {
     final OptimizeElasticsearchClient esClient = getOptimizeElasticClient();
@@ -555,16 +596,25 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
             .indices(exportIndex)
             .source(
                 new SearchSourceBuilder().query(boolQueryBuilder).trackTotalHits(true).size(100));
-    final SearchResponse searchResponse = esClient.searchWithoutPrefixing(searchRequest);
+    final SearchResponse searchResponse;
+    try {
+      searchResponse = esClient.searchWithoutPrefixing(searchRequest);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     return ElasticsearchReaderUtil.mapHits(
         searchResponse.getHits(), zeebeRecordClass, OPTIMIZE_MAPPER);
   }
 
   @Override
-  @SneakyThrows
+
   public void deleteProcessInstancesFromIndex(final String indexName, final String id) {
     final DeleteRequest request = new DeleteRequest(indexName).id(id).setRefreshPolicy(IMMEDIATE);
-    getOptimizeElasticClient().delete(request);
+    try {
+      getOptimizeElasticClient().delete(request);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -573,7 +623,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-  @SneakyThrows
+
   protected <T extends OptimizeDto> List<T> getInstancesById(
       final String indexName,
       final List<String> instanceIds,
@@ -589,34 +639,56 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     final SearchRequest searchRequest =
         new SearchRequest().indices(indexName).source(searchSourceBuilder);
 
-    final SearchResponse searchResponse = getOptimizeElasticClient().search(searchRequest);
+    final SearchResponse searchResponse;
+    try {
+      searchResponse = getOptimizeElasticClient().search(searchRequest);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     for (final SearchHit hit : searchResponse.getHits().getHits()) {
-      results.add(getObjectMapper().readValue(hit.getSourceAsString(), type));
+      try {
+        results.add(getObjectMapper().readValue(hit.getSourceAsString(), type));
+      } catch (final JsonProcessingException e) {
+        throw new RuntimeException(e);
+      }
     }
     return results;
   }
 
   @Override
-  @SneakyThrows
+
   public <T> Optional<T> getDatabaseEntryById(
       final String indexName, final String entryId, final Class<T> type) {
     final GetRequest getRequest = new GetRequest().index(indexName).id(entryId);
-    final GetResponse getResponse = getOptimizeElasticClient().get(getRequest);
+    final GetResponse getResponse;
+    try {
+      getResponse = getOptimizeElasticClient().get(getRequest);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     if (getResponse.isExists()) {
-      return Optional.of(getObjectMapper().readValue(getResponse.getSourceAsString(), type));
+      try {
+        return Optional.of(getObjectMapper().readValue(getResponse.getSourceAsString(), type));
+      } catch (final JsonProcessingException e) {
+        throw new RuntimeException(e);
+      }
     } else {
       return Optional.empty();
     }
   }
 
   @Override
-  @SneakyThrows
+
   public String getDatabaseVersion() {
     if (elasticsearchDatabaseVersion == null) {
-      elasticsearchDatabaseVersion =
-          ElasticsearchHighLevelRestClientBuilder.getCurrentESVersion(
-              getOptimizeElasticClient().getHighLevelClient(),
-              getOptimizeElasticClient().requestOptions());
+      try {
+        elasticsearchDatabaseVersion =
+            ElasticsearchHighLevelRestClientBuilder.getCurrentESVersion(
+                getOptimizeElasticClient().getHighLevelClient(),
+                getOptimizeElasticClient().requestOptions());
+      } catch (final IOException e) {
+        throw new RuntimeException(e);
+      }
     }
     return elasticsearchDatabaseVersion;
   }
@@ -635,7 +707,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-  @SneakyThrows
+
   public void updateProcessInstanceNestedDocLimit(
       final String processDefinitionKey,
       final int nestedDocLimit,
@@ -648,12 +720,16 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
             .getOptimizeIndexNameWithVersionForAllIndicesOf(
                 new ProcessInstanceIndexES(processDefinitionKey));
 
-    esClient
-        .getHighLevelClient()
-        .indices()
-        .putSettings(
-            new UpdateSettingsRequest(buildDynamicSettings(configurationService), indexName),
-            esClient.requestOptions());
+    try {
+      esClient
+          .getHighLevelClient()
+          .indices()
+          .putSettings(
+              new UpdateSettingsRequest(buildDynamicSettings(configurationService), indexName),
+              esClient.requestOptions());
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -721,7 +797,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-  @SneakyThrows
+
   public Long getImportedActivityCount() {
     final SearchSourceBuilder searchSourceBuilder =
         new SearchSourceBuilder()
@@ -740,7 +816,12 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     final SearchRequest searchRequest =
         new SearchRequest().indices(PROCESS_INSTANCE_MULTI_ALIAS).source(searchSourceBuilder);
 
-    final SearchResponse response = getOptimizeElasticClient().search(searchRequest);
+    final SearchResponse response;
+    try {
+      response = getOptimizeElasticClient().search(searchRequest);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
 
     final Nested nested = response.getAggregations().get(FLOW_NODE_INSTANCES);
     final ValueCount countAggregator =
@@ -749,11 +830,15 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-  @SneakyThrows
+
   public List<String> getAllIndicesWithWriteAlias(final String aliasNameWithPrefix) {
     final GetAliasesRequest aliasesRequest = new GetAliasesRequest().aliases(aliasNameWithPrefix);
-    final Map<String, Set<AliasMetadata>> indexNameToAliasMap =
-        getOptimizeElasticClient().getAlias(aliasesRequest).getAliases();
+    final Map<String, Set<AliasMetadata>> indexNameToAliasMap;
+    try {
+      indexNameToAliasMap = getOptimizeElasticClient().getAlias(aliasesRequest).getAliases();
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
     return indexNameToAliasMap.keySet().stream()
         .filter(
             index -> indexNameToAliasMap.get(index).stream().anyMatch(AliasMetadata::writeIndex))
@@ -782,7 +867,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     }
   }
 
-  @SneakyThrows
+
   private boolean isDatabaseVersionGreaterThanOrEqualTo(final String dbVersion) {
     return Stream.of(dbVersion, getDatabaseVersion())
         .map(ModuleDescriptor.Version::parse)
@@ -855,14 +940,22 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     }
   }
 
-  @SneakyThrows
+
   private String writeJsonString(final Map.Entry<String, Object> idAndObject) {
-    return OBJECT_MAPPER.writeValueAsString(idAndObject.getValue());
+    try {
+      return OBJECT_MAPPER.writeValueAsString(idAndObject.getValue());
+    } catch (final JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  @SneakyThrows
+
   private void executeBulk(final BulkRequest bulkRequest) {
-    getOptimizeElasticClient().bulk(bulkRequest);
+    try {
+      getOptimizeElasticClient().bulk(bulkRequest);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private <T> List<T> getAllDocumentsOfIndexAs(
@@ -875,7 +968,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     }
   }
 
-  @SneakyThrows
+
   private <T> List<T> getAllDocumentsOfIndicesAs(
       final String[] indexNames, final Class<T> type, final QueryBuilder query) {
 
@@ -897,15 +990,24 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     if (groupedByPrefix.containsKey("ZeebeIndex")) {
       final SearchRequest searchRequest =
           new SearchRequest().indices(indexNames).source(searchSourceBuilder);
-      final SearchResponse response =
-          getOptimizeElasticClient().searchWithoutPrefixing(searchRequest);
+      final SearchResponse response;
+      try {
+        response = getOptimizeElasticClient().searchWithoutPrefixing(searchRequest);
+      } catch (final IOException e) {
+        throw new RuntimeException(e);
+      }
       results.addAll(mapHits(response.getHits(), type, getObjectMapper()));
     }
 
     if (groupedByPrefix.containsKey("OptimizeIndex")) {
       final SearchRequest searchRequest =
           new SearchRequest().indices(indexNames).source(searchSourceBuilder);
-      final SearchResponse response = getOptimizeElasticClient().search(searchRequest);
+      final SearchResponse response;
+      try {
+        response = getOptimizeElasticClient().search(searchRequest);
+      } catch (final IOException e) {
+        throw new RuntimeException(e);
+      }
       results.addAll(mapHits(response.getHits(), type, getObjectMapper()));
     }
 

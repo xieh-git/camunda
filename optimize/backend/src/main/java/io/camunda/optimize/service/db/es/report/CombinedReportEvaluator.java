@@ -26,23 +26,23 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class CombinedReportEvaluator {
 
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(CombinedReportEvaluator.class);
   private final SingleReportEvaluator singleReportEvaluatorInjected;
   private final DatabaseClient databaseClient;
 
   public CombinedReportEvaluator(
       final SingleReportEvaluator singleReportEvaluator, final DatabaseClient databaseClient) {
-    this.singleReportEvaluatorInjected = singleReportEvaluator;
+    singleReportEvaluatorInjected = singleReportEvaluator;
     this.databaseClient = databaseClient;
   }
 
@@ -75,14 +75,14 @@ public class CombinedReportEvaluator {
     try {
       return databaseClient.count(
           new String[] {PROCESS_INSTANCE_MULTI_ALIAS}, instanceCountRequestQuery);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       final String message =
           String.format(
               "Could not count instances in combined report with single report IDs: [%s]",
               singleReportDefinitions.stream().map(ReportDefinitionDto::getId));
       log.error(message, e);
       throw new OptimizeRuntimeException(message, e);
-    } catch (RuntimeException e) {
+    } catch (final RuntimeException e) {
       if (isInstanceIndexNotFoundException(e)) {
         log.info(
             "Could not evaluate combined instance count because no instance indices exist. "
@@ -110,9 +110,9 @@ public class CombinedReportEvaluator {
                     .noneMatch(command -> command.getClass().equals(NotSupportedCommand.class)))
         .map(
             reportDefinition -> {
-              ProcessCmd<?> command =
+              final ProcessCmd<?> command =
                   (ProcessCmd<?>) singleReportEvaluator.extractCommands(reportDefinition).get(0);
-              ReportEvaluationContext<SingleProcessReportDefinitionRequestDto>
+              final ReportEvaluationContext<SingleProcessReportDefinitionRequestDto>
                   reportEvaluationContext = new ReportEvaluationContext<>();
               reportEvaluationContext.setReportDefinition(reportDefinition);
               return command.getBaseQuery(reportEvaluationContext);
@@ -136,7 +136,7 @@ public class CombinedReportEvaluator {
           reportEvaluationContext.setReportDefinition(reportDefinition);
           reportEvaluationContext.setTimezone(timezone);
 
-          Optional<MinMaxStatDto> minMaxStatDto =
+          final Optional<MinMaxStatDto> minMaxStatDto =
               command.getGroupByMinMaxStats(reportEvaluationContext);
           minMaxStatDto.ifPresent(combinedIntervalCalculator::addStat);
         });
@@ -151,14 +151,14 @@ public class CombinedReportEvaluator {
       final ZoneId timezone) {
     Optional<SingleReportEvaluationResult<?>> result = Optional.empty();
     try {
-      ReportEvaluationContext<ReportDefinitionDto<?>> reportEvaluationContext =
+      final ReportEvaluationContext<ReportDefinitionDto<?>> reportEvaluationContext =
           new ReportEvaluationContext<>();
       reportEvaluationContext.setReportDefinition(reportDefinition);
       reportEvaluationContext.setTimezone(timezone);
-      SingleReportEvaluationResult<?> singleResult =
+      final SingleReportEvaluationResult<?> singleResult =
           singleReportEvaluator.evaluate(reportEvaluationContext);
       result = Optional.of(singleResult);
-    } catch (OptimizeException | OptimizeValidationException onlyForLogging) {
+    } catch (final OptimizeException | OptimizeValidationException onlyForLogging) {
       // we just ignore reports that cannot be evaluated in a combined report
       log.debug(
           "Single report with id [{}] could not be evaluated for a combined report.",
@@ -170,7 +170,7 @@ public class CombinedReportEvaluator {
 
   private static class SingleReportEvaluatorForCombinedReports extends SingleReportEvaluator {
 
-    @Setter private MinMaxStatDto combinedRangeMinMaxStats;
+    private MinMaxStatDto combinedRangeMinMaxStats;
 
     private SingleReportEvaluatorForCombinedReports(final SingleReportEvaluator evaluator) {
       super(
@@ -186,6 +186,10 @@ public class CombinedReportEvaluator {
         throws OptimizeException {
       reportEvaluationContext.setCombinedRangeMinMaxStats(combinedRangeMinMaxStats);
       return super.evaluate(reportEvaluationContext);
+    }
+
+    public void setCombinedRangeMinMaxStats(final MinMaxStatDto combinedRangeMinMaxStats) {
+      this.combinedRangeMinMaxStats = combinedRangeMinMaxStats;
     }
   }
 }

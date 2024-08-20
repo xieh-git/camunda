@@ -65,8 +65,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.common.TriFunction;
@@ -77,7 +75,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.TermsQueryBuilder;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ModelElementFilterQueryUtil {
 
   private static final Set<Class<? extends ProcessFilterDto<?>>> FLOW_NODE_VIEW_LEVEL_FILTERS =
@@ -123,6 +120,8 @@ public class ModelElementFilterQueryUtil {
           FLOW_NODE_DEFINITION_VERSION,
           FLOW_NODE_TENANT_ID);
 
+  private ModelElementFilterQueryUtil() {}
+
   public static Optional<NestedQueryBuilder> addInstanceFilterForRelevantViewLevelFilters(
       final List<ProcessFilterDto<?>> filters, final FilterContext filterContext) {
     final List<ProcessFilterDto<?>> viewLevelFiltersForInstanceMatch =
@@ -131,7 +130,7 @@ public class ModelElementFilterQueryUtil {
             .filter(filter -> FLOW_NODE_VIEW_LEVEL_FILTERS.contains(filter.getClass()))
             .toList();
     if (!viewLevelFiltersForInstanceMatch.isEmpty()) {
-      BoolQueryBuilder viewFilterInstanceQuery =
+      final BoolQueryBuilder viewFilterInstanceQuery =
           createFlowNodeTypeFilterQuery(filterContext.isUserTaskReport());
       viewLevelFiltersForInstanceMatch.forEach(
           filter -> {

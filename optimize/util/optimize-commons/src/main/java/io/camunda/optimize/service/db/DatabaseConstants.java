@@ -7,10 +7,6 @@
  */
 package io.camunda.optimize.service.db;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DatabaseConstants {
 
   // Note: we cap listings to 1000 as a generous practical limit, no paging
@@ -125,4 +121,6 @@ public class DatabaseConstants {
 
   // Units
   public static final String GB_UNIT = "gb";
+
+  private DatabaseConstants() {}
 }

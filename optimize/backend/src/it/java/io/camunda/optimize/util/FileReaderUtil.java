@@ -7,22 +7,25 @@
  */
 package io.camunda.optimize.util;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileReaderUtil {
 
-  @SneakyThrows
+  private FileReaderUtil() {}
+
   public static String readFile(final String pathString) {
-    return IOUtils.toString(
-        FileReaderUtil.class.getResource(pathString).toURI(), StandardCharsets.UTF_8);
+    try {
+      return IOUtils.toString(
+          FileReaderUtil.class.getResource(pathString).toURI(), StandardCharsets.UTF_8);
+    } catch (final IOException | URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  public static String readFileWithWindowsLineSeparator(String path) {
+  public static String readFileWithWindowsLineSeparator(final String path) {
     return readFile(path).replace("\n", "\r\n");
   }
 

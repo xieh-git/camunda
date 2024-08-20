@@ -1,3 +1,4 @@
+
 /*
  * Copyright Camunda Services GmbH and/or licensed to Camunda Services GmbH under
  * one or more contributor license agreements. See the NOTICE file distributed
@@ -21,11 +22,14 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class EntitiesClient {
+
   private final Supplier<OptimizeRequestExecutor> requestExecutorSupplier;
+
+  public EntitiesClient(final Supplier<OptimizeRequestExecutor> requestExecutorSupplier) {
+    this.requestExecutorSupplier = requestExecutorSupplier;
+  }
 
   public List<EntityResponseDto> getAllEntities() {
     return getAllEntities(null);

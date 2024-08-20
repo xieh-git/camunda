@@ -132,19 +132,19 @@ import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.client.ClientProperties;
+import org.slf4j.Logger;
 
-@Slf4j
 public class OptimizeRequestExecutor {
 
   private static final int MAX_LOGGED_BODY_SIZE = 10_000;
   private static final String ALERT = "alert";
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
+      OptimizeRequestExecutor.class);
 
-  @Getter private final WebTarget defaultWebTarget;
+  private final WebTarget defaultWebTarget;
 
-  @Getter private WebTarget webTarget;
+  private WebTarget webTarget;
 
   private final String defaultUser;
   private final String defaultUserPassword;
@@ -585,15 +585,15 @@ public class OptimizeRequestExecutor {
   }
 
   public <T extends SingleReportDataDto>
-      OptimizeRequestExecutor buildEvaluateSingleUnsavedReportRequestWithPagination(
-          T entity, PaginationRequestDto paginationDto) {
+  OptimizeRequestExecutor buildEvaluateSingleUnsavedReportRequestWithPagination(
+      T entity, PaginationRequestDto paginationDto) {
     buildEvaluateSingleUnsavedReportRequest(entity);
     Optional.ofNullable(paginationDto).ifPresent(this::addPaginationParams);
     return this;
   }
 
   public <T extends SingleReportDataDto>
-      OptimizeRequestExecutor buildEvaluateSingleUnsavedReportRequest(T entity) {
+  OptimizeRequestExecutor buildEvaluateSingleUnsavedReportRequest(T entity) {
     this.path = "report/evaluate";
     if (entity instanceof ProcessReportDataDto) {
       ProcessReportDataDto dataDto = (ProcessReportDataDto) entity;
@@ -617,7 +617,7 @@ public class OptimizeRequestExecutor {
   }
 
   public <T extends SingleReportDefinitionDto>
-      OptimizeRequestExecutor buildEvaluateSingleUnsavedReportRequest(T definitionDto) {
+  OptimizeRequestExecutor buildEvaluateSingleUnsavedReportRequest(T definitionDto) {
     this.path = "report/evaluate";
     if (definitionDto instanceof SingleProcessReportDefinitionRequestDto) {
       this.body = getBody(definitionDto);
@@ -1836,15 +1836,15 @@ public class OptimizeRequestExecutor {
           .init(
               null,
               new TrustManager[] {
-                new X509TrustManager() {
-                  public void checkClientTrusted(X509Certificate[] arg0, String arg1) {}
+                  new X509TrustManager() {
+                    public void checkClientTrusted(X509Certificate[] arg0, String arg1) {}
 
-                  public void checkServerTrusted(X509Certificate[] arg0, String arg1) {}
+                    public void checkServerTrusted(X509Certificate[] arg0, String arg1) {}
 
-                  public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
+                    public X509Certificate[] getAcceptedIssuers() {
+                      return new X509Certificate[0];
+                    }
                   }
-                }
               },
               new java.security.SecureRandom());
       HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
@@ -1881,5 +1881,13 @@ public class OptimizeRequestExecutor {
 
   private static ObjectMapper getDefaultObjectMapper() {
     return OPTIMIZE_MAPPER;
+  }
+
+  public WebTarget getDefaultWebTarget() {
+    return this.defaultWebTarget;
+  }
+
+  public WebTarget getWebTarget() {
+    return this.webTarget;
   }
 }
