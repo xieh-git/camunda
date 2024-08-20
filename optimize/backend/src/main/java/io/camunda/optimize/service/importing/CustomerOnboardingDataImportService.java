@@ -40,16 +40,18 @@ public class CustomerOnboardingDataImportService {
       "customer_onboarding_definition.json";
   private static final String PROCESSED_INSTANCES = "customer_onboarding_process_instances.json";
   private static final int BATCH_SIZE = 2000;
-  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
-      CustomerOnboardingDataImportService.class);
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(CustomerOnboardingDataImportService.class);
   private final ProcessDefinitionWriter processDefinitionWriter;
   private final ObjectMapper objectMapper;
   private final ConfigurationService configurationService;
   private final ProcessInstanceWriter processInstanceWriter;
   private final ProcessInstanceRepository processInstanceRepository;
 
-  public CustomerOnboardingDataImportService(ProcessDefinitionWriter processDefinitionWriter,
-      ObjectMapper objectMapper, ConfigurationService configurationService,
+  public CustomerOnboardingDataImportService(
+      ProcessDefinitionWriter processDefinitionWriter,
+      ObjectMapper objectMapper,
+      ConfigurationService configurationService,
       ProcessInstanceWriter processInstanceWriter,
       ProcessInstanceRepository processInstanceRepository) {
     this.processDefinitionWriter = processDefinitionWriter;

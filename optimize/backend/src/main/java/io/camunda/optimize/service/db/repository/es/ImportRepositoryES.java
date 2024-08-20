@@ -52,9 +52,11 @@ public class ImportRepositoryES implements ImportRepository {
   private final ConfigurationService configurationService;
   private final DateTimeFormatter dateTimeFormatter;
 
-  public ImportRepositoryES(final OptimizeElasticsearchClient esClient,
+  public ImportRepositoryES(
+      final OptimizeElasticsearchClient esClient,
       final ObjectMapper objectMapper,
-      final ConfigurationService configurationService, final DateTimeFormatter dateTimeFormatter) {
+      final ConfigurationService configurationService,
+      final DateTimeFormatter dateTimeFormatter) {
     this.esClient = esClient;
     this.objectMapper = objectMapper;
     this.configurationService = configurationService;
@@ -164,8 +166,8 @@ public class ImportRepositoryES implements ImportRepository {
   }
 
   private IndexRequest createTimestampBasedRequest(final TimestampBasedImportIndexDto importIndex) {
-    final String currentTimeStamp = dateTimeFormatter.format(
-        importIndex.getTimestampOfLastEntity());
+    final String currentTimeStamp =
+        dateTimeFormatter.format(importIndex.getTimestampOfLastEntity());
     log.debug(
         "Writing timestamp based import index [{}] of type [{}] with execution timestamp [{}] to elasticsearch",
         currentTimeStamp,

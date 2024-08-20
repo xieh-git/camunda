@@ -66,15 +66,17 @@ import org.springframework.stereotype.Component;
 @Conditional(ElasticSearchCondition.class)
 class ProcessInstanceRepositoryES implements ProcessInstanceRepository {
 
-  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
-      ProcessInstanceRepositoryES.class);
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(ProcessInstanceRepositoryES.class);
   private final ConfigurationService configurationService;
   private final OptimizeElasticsearchClient esClient;
   private final ObjectMapper objectMapper;
   private final DateTimeFormatter dateTimeFormatter;
 
-  public ProcessInstanceRepositoryES(ConfigurationService configurationService,
-      OptimizeElasticsearchClient esClient, ObjectMapper objectMapper,
+  public ProcessInstanceRepositoryES(
+      ConfigurationService configurationService,
+      OptimizeElasticsearchClient esClient,
+      ObjectMapper objectMapper,
       DateTimeFormatter dateTimeFormatter) {
     this.configurationService = configurationService;
     this.esClient = esClient;

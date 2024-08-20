@@ -78,7 +78,6 @@ public class ElasticSearchSchemaManager
   private static final Logger log =
       org.slf4j.LoggerFactory.getLogger(ElasticSearchSchemaManager.class);
 
-
   protected final ElasticSearchMetadataService metadataService;
 
   @Autowired

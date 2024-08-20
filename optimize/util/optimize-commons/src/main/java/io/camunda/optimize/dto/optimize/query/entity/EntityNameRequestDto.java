@@ -26,8 +26,7 @@ public class EntityNameRequestDto {
     this.reportId = reportId;
   }
 
-  public EntityNameRequestDto() {
-  }
+  public EntityNameRequestDto() {}
 
   public String getCollectionId() {
     return this.collectionId;
@@ -82,13 +81,15 @@ public class EntityNameRequestDto {
     }
     final Object this$collectionId = this.getCollectionId();
     final Object other$collectionId = other.getCollectionId();
-    if (this$collectionId == null ? other$collectionId != null
+    if (this$collectionId == null
+        ? other$collectionId != null
         : !this$collectionId.equals(other$collectionId)) {
       return false;
     }
     final Object this$dashboardId = this.getDashboardId();
     final Object other$dashboardId = other.getDashboardId();
-    if (this$dashboardId == null ? other$dashboardId != null
+    if (this$dashboardId == null
+        ? other$dashboardId != null
         : !this$dashboardId.equals(other$dashboardId)) {
       return false;
     }
@@ -101,8 +102,13 @@ public class EntityNameRequestDto {
   }
 
   public String toString() {
-    return "EntityNameRequestDto(collectionId=" + this.getCollectionId() + ", dashboardId="
-        + this.getDashboardId() + ", reportId=" + this.getReportId() + ")";
+    return "EntityNameRequestDto(collectionId="
+        + this.getCollectionId()
+        + ", dashboardId="
+        + this.getDashboardId()
+        + ", reportId="
+        + this.getReportId()
+        + ")";
   }
 
   public enum Fields {

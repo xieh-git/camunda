@@ -23,7 +23,8 @@ public class IngestionClient {
   private final Supplier<OptimizeRequestExecutor> requestExecutorSupplier;
   private final Supplier<String> accessTokenSupplier;
 
-  public IngestionClient(Supplier<OptimizeRequestExecutor> requestExecutorSupplier,
+  public IngestionClient(
+      Supplier<OptimizeRequestExecutor> requestExecutorSupplier,
       Supplier<String> accessTokenSupplier) {
     this.requestExecutorSupplier = requestExecutorSupplier;
     this.accessTokenSupplier = accessTokenSupplier;

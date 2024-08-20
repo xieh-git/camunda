@@ -129,8 +129,8 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   private static final String MOCKSERVER_CLIENT_KEY = "MockServer";
   private static final Map<String, OptimizeElasticsearchClient> CLIENT_CACHE = new HashMap<>();
   private static final ClientAndServer mockServerClient = initMockServer();
-  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
-      ElasticsearchDatabaseTestService.class);
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(ElasticsearchDatabaseTestService.class);
 
   private String elasticsearchDatabaseVersion;
 
@@ -285,9 +285,10 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   public void deleteAllIndicesContainingTerm(final String indexTerm) {
     final String[] indicesToDelete;
     try {
-      indicesToDelete = getOptimizeElasticClient().getAllIndexNames().stream()
-          .filter(index -> index.contains(indexTerm))
-          .toArray(String[]::new);
+      indicesToDelete =
+          getOptimizeElasticClient().getAllIndexNames().stream()
+              .filter(index -> index.contains(indexTerm))
+              .toArray(String[]::new);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -349,11 +350,12 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   public void deleteIndicesStartingWithPrefix(final String term) {
     final String[] indicesToDelete;
     try {
-      indicesToDelete = getOptimizeElasticClient().getAllIndexNames().stream()
-          .filter(
-              indexName ->
-                  indexName.startsWith(getIndexNameService().getIndexPrefix() + "-" + term))
-          .toArray(String[]::new);
+      indicesToDelete =
+          getOptimizeElasticClient().getAllIndexNames().stream()
+              .filter(
+                  indexName ->
+                      indexName.startsWith(getIndexNameService().getIndexPrefix() + "-" + term))
+              .toArray(String[]::new);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -366,16 +368,17 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   public void deleteAllZeebeRecordsForPrefix(final String zeebeRecordPrefix) {
     final String[] indicesToDelete;
     try {
-      indicesToDelete = Arrays.stream(
-              getOptimizeElasticClient()
-                  .getHighLevelClient()
-                  .indices()
-                  .get(
-                      new GetIndexRequest("*").indicesOptions(INDICES_EXIST_OPTIONS),
-                      getOptimizeElasticClient().requestOptions())
-                  .getIndices())
-          .filter(indexName -> indexName.contains(zeebeRecordPrefix))
-          .toArray(String[]::new);
+      indicesToDelete =
+          Arrays.stream(
+                  getOptimizeElasticClient()
+                      .getHighLevelClient()
+                      .indices()
+                      .get(
+                          new GetIndexRequest("*").indicesOptions(INDICES_EXIST_OPTIONS),
+                          getOptimizeElasticClient().requestOptions())
+                      .getIndices())
+              .filter(indexName -> indexName.contains(zeebeRecordPrefix))
+              .toArray(String[]::new);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -389,18 +392,19 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       final String zeebeRecordPrefix, final String recordsToKeep) {
     final String[] indicesToDelete;
     try {
-      indicesToDelete = Arrays.stream(
-              getOptimizeElasticClient()
-                  .getHighLevelClient()
-                  .indices()
-                  .get(
-                      new GetIndexRequest("*").indicesOptions(INDICES_EXIST_OPTIONS),
-                      getOptimizeElasticClient().requestOptions())
-                  .getIndices())
-          .filter(
-              indexName ->
-                  indexName.contains(zeebeRecordPrefix) && !indexName.contains(recordsToKeep))
-          .toArray(String[]::new);
+      indicesToDelete =
+          Arrays.stream(
+                  getOptimizeElasticClient()
+                      .getHighLevelClient()
+                      .indices()
+                      .get(
+                          new GetIndexRequest("*").indicesOptions(INDICES_EXIST_OPTIONS),
+                          getOptimizeElasticClient().requestOptions())
+                      .getIndices())
+              .filter(
+                  indexName ->
+                      indexName.contains(zeebeRecordPrefix) && !indexName.contains(recordsToKeep))
+              .toArray(String[]::new);
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -408,7 +412,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
     }
   }
-
 
   @Override
   public void updateZeebeRecordsForPrefix(
@@ -432,7 +435,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       throw new RuntimeException(e);
     }
   }
-
 
   @Override
   public void updateZeebeRecordsWithPositionForPrefix(
@@ -459,7 +461,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       throw new RuntimeException(e);
     }
   }
-
 
   @Override
   public void updateZeebeRecordsOfBpmnElementTypeForPrefix(
@@ -492,7 +493,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       throw new RuntimeException(e);
     }
   }
-
 
   @Override
   public void updateUserTaskDurations(
@@ -543,7 +543,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     }
   }
 
-
   @Override
   public OffsetDateTime getLastImportTimestampOfTimestampBasedImportIndex(
       final String dbType, final String engine) {
@@ -586,7 +585,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-
   public <T> List<T> getZeebeExportedRecordsByQuery(
       final String exportIndex, final TermsQueryContainer query, final Class<T> zeebeRecordClass) {
     final OptimizeElasticsearchClient esClient = getOptimizeElasticClient();
@@ -607,7 +605,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-
   public void deleteProcessInstancesFromIndex(final String indexName, final String id) {
     final DeleteRequest request = new DeleteRequest(indexName).id(id).setRefreshPolicy(IMMEDIATE);
     try {
@@ -623,7 +620,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-
   protected <T extends OptimizeDto> List<T> getInstancesById(
       final String indexName,
       final List<String> instanceIds,
@@ -656,7 +652,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-
   public <T> Optional<T> getDatabaseEntryById(
       final String indexName, final String entryId, final Class<T> type) {
     final GetRequest getRequest = new GetRequest().index(indexName).id(entryId);
@@ -678,7 +673,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-
   public String getDatabaseVersion() {
     if (elasticsearchDatabaseVersion == null) {
       try {
@@ -707,7 +701,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-
   public void updateProcessInstanceNestedDocLimit(
       final String processDefinitionKey,
       final int nestedDocLimit,
@@ -797,7 +790,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-
   public Long getImportedActivityCount() {
     final SearchSourceBuilder searchSourceBuilder =
         new SearchSourceBuilder()
@@ -830,7 +822,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
   }
 
   @Override
-
   public List<String> getAllIndicesWithWriteAlias(final String aliasNameWithPrefix) {
     final GetAliasesRequest aliasesRequest = new GetAliasesRequest().aliases(aliasNameWithPrefix);
     final Map<String, Set<AliasMetadata>> indexNameToAliasMap;
@@ -866,7 +857,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       throw new OptimizeIntegrationTestException(e);
     }
   }
-
 
   private boolean isDatabaseVersionGreaterThanOrEqualTo(final String dbVersion) {
     return Stream.of(dbVersion, getDatabaseVersion())
@@ -940,7 +930,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     }
   }
 
-
   private String writeJsonString(final Map.Entry<String, Object> idAndObject) {
     try {
       return OBJECT_MAPPER.writeValueAsString(idAndObject.getValue());
@@ -948,7 +937,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       throw new RuntimeException(e);
     }
   }
-
 
   private void executeBulk(final BulkRequest bulkRequest) {
     try {
@@ -967,7 +955,6 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
           "Cannot get all documents for index " + indexName, e);
     }
   }
-
 
   private <T> List<T> getAllDocumentsOfIndicesAs(
       final String[] indexNames, final Class<T> type, final QueryBuilder query) {

@@ -233,10 +233,6 @@ public abstract class DatabaseTestService {
         DECISION_INSTANCE_MULTI_ALIAS, instanceIds, DecisionInstanceDto.class);
   }
 
-  protected void setTestIndexRepository(final TestIndexRepository testIndexRepository) {
-    this.testIndexRepository = testIndexRepository;
-  }
-
   public <T extends DecisionInstanceDto> List<T> getDecisionInstancesById(
       final String indexName, final List<String> instanceIds, final Class<T> type) {
     return getInstancesById(
@@ -286,7 +282,7 @@ public abstract class DatabaseTestService {
   public abstract List<String> getAllIndicesWithWriteAlias(String aliasNameWithPrefix);
 
   public TestIndexRepository getTestIndexRepository() {
-    return this.testIndexRepository;
+    return testIndexRepository;
   }
 
   protected void setTestIndexRepository(final TestIndexRepository testIndexRepository) {

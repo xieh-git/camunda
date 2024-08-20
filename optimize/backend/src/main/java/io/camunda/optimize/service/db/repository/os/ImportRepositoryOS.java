@@ -47,8 +47,10 @@ public class ImportRepositoryOS implements ImportRepository {
   private final OptimizeIndexNameService indexNameService;
   private final DateTimeFormatter dateTimeFormatter;
 
-  public ImportRepositoryOS(OptimizeOpenSearchClient osClient,
-      ConfigurationService configurationService, OptimizeIndexNameService indexNameService,
+  public ImportRepositoryOS(
+      OptimizeOpenSearchClient osClient,
+      ConfigurationService configurationService,
+      OptimizeIndexNameService indexNameService,
       DateTimeFormatter dateTimeFormatter) {
     this.osClient = osClient;
     this.configurationService = configurationService;

@@ -26,8 +26,7 @@ public class TimestampBasedImportIndexDto extends ImportIndexDto<IngestedDataSou
     this.esTypeIndexRefersTo = esTypeIndexRefersTo;
   }
 
-  public TimestampBasedImportIndexDto() {
-  }
+  public TimestampBasedImportIndexDto() {}
 
   @JsonIgnore
   public String getDataSourceName() {
@@ -83,9 +82,7 @@ public class TimestampBasedImportIndexDto extends ImportIndexDto<IngestedDataSou
 
   @Override
   public String toString() {
-    return "TimestampBasedImportIndexDto(esTypeIndexRefersTo="
-        + getEsTypeIndexRefersTo()
-        + ")";
+    return "TimestampBasedImportIndexDto(esTypeIndexRefersTo=" + getEsTypeIndexRefersTo() + ")";
   }
 
   public static final class Fields {

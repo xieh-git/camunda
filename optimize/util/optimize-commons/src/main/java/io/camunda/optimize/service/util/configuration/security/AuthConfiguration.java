@@ -30,8 +30,7 @@ public class AuthConfiguration {
   @JsonProperty("cookie")
   private CookieConfiguration cookieConfiguration;
 
-  public AuthConfiguration() {
-  }
+  public AuthConfiguration() {}
 
   @JsonIgnore
   public int getTokenLifeTimeMinutes() {
@@ -99,8 +98,9 @@ public class AuthConfiguration {
     final int PRIME = 59;
     int result = 1;
     final Object $cloudAuthConfiguration = getCloudAuthConfiguration();
-    result = result * PRIME + ($cloudAuthConfiguration == null ? 43
-        : $cloudAuthConfiguration.hashCode());
+    result =
+        result * PRIME
+            + ($cloudAuthConfiguration == null ? 43 : $cloudAuthConfiguration.hashCode());
     final Object $ccsmAuthConfiguration = getCcsmAuthConfiguration();
     result =
         result * PRIME + ($ccsmAuthConfiguration == null ? 43 : $ccsmAuthConfiguration.hashCode());
@@ -127,31 +127,36 @@ public class AuthConfiguration {
     }
     final Object this$cloudAuthConfiguration = getCloudAuthConfiguration();
     final Object other$cloudAuthConfiguration = other.getCloudAuthConfiguration();
-    if (this$cloudAuthConfiguration == null ? other$cloudAuthConfiguration != null
+    if (this$cloudAuthConfiguration == null
+        ? other$cloudAuthConfiguration != null
         : !this$cloudAuthConfiguration.equals(other$cloudAuthConfiguration)) {
       return false;
     }
     final Object this$ccsmAuthConfiguration = getCcsmAuthConfiguration();
     final Object other$ccsmAuthConfiguration = other.getCcsmAuthConfiguration();
-    if (this$ccsmAuthConfiguration == null ? other$ccsmAuthConfiguration != null
+    if (this$ccsmAuthConfiguration == null
+        ? other$ccsmAuthConfiguration != null
         : !this$ccsmAuthConfiguration.equals(other$ccsmAuthConfiguration)) {
       return false;
     }
     final Object this$tokenLifeTime = getTokenLifeTime();
     final Object other$tokenLifeTime = other.getTokenLifeTime();
-    if (this$tokenLifeTime == null ? other$tokenLifeTime != null
+    if (this$tokenLifeTime == null
+        ? other$tokenLifeTime != null
         : !this$tokenLifeTime.equals(other$tokenLifeTime)) {
       return false;
     }
     final Object this$tokenSecret = getTokenSecret();
     final Object other$tokenSecret = other.getTokenSecret();
-    if (this$tokenSecret == null ? other$tokenSecret != null
+    if (this$tokenSecret == null
+        ? other$tokenSecret != null
         : !this$tokenSecret.equals(other$tokenSecret)) {
       return false;
     }
     final Object this$cookieConfiguration = getCookieConfiguration();
     final Object other$cookieConfiguration = other.getCookieConfiguration();
-    if (this$cookieConfiguration == null ? other$cookieConfiguration != null
+    if (this$cookieConfiguration == null
+        ? other$cookieConfiguration != null
         : !this$cookieConfiguration.equals(other$cookieConfiguration)) {
       return false;
     }
@@ -160,9 +165,16 @@ public class AuthConfiguration {
 
   @Override
   public String toString() {
-    return "AuthConfiguration(cloudAuthConfiguration=" + getCloudAuthConfiguration()
-        + ", ccsmAuthConfiguration=" + getCcsmAuthConfiguration() + ", tokenLifeTime="
-        + getTokenLifeTime() + ", tokenSecret=" + getTokenSecret()
-        + ", cookieConfiguration=" + getCookieConfiguration() + ")";
+    return "AuthConfiguration(cloudAuthConfiguration="
+        + getCloudAuthConfiguration()
+        + ", ccsmAuthConfiguration="
+        + getCcsmAuthConfiguration()
+        + ", tokenLifeTime="
+        + getTokenLifeTime()
+        + ", tokenSecret="
+        + getTokenSecret()
+        + ", cookieConfiguration="
+        + getCookieConfiguration()
+        + ")";
   }
 }

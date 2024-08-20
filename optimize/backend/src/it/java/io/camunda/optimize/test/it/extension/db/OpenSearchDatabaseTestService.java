@@ -228,7 +228,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
   public Integer getDocumentCountOf(final String indexName) {
     try {
       return Long.valueOf(
-              getOptimizeOpenSearchClient().count(new String[]{indexName}, QueryDSL.matchAll()))
+              getOptimizeOpenSearchClient().count(new String[] {indexName}, QueryDSL.matchAll()))
           .intValue();
     } catch (final IOException e) {
       throw new OptimizeIntegrationTestException(
@@ -461,7 +461,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
       final TermsQueryContainer queryContainer, final String expectedIndex) {
     try {
       return getOptimizeOpenSearchClient()
-          .count(new String[]{expectedIndex}, queryContainer.toOpenSearchQuery());
+          .count(new String[] {expectedIndex}, queryContainer.toOpenSearchQuery());
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -506,7 +506,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
       final String idField,
       final Class<T> type) {
     return getAllDocumentsOfIndicesAs(
-        new String[]{indexName}, type, QueryDSL.stringTerms(idField, instanceIds));
+        new String[] {indexName}, type, QueryDSL.stringTerms(idField, instanceIds));
   }
 
   @Override
@@ -727,7 +727,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
 
   private <T> List<T> getAllDocumentsOfIndexAs(
       final String indexName, final Class<T> type, final Query query) {
-    return getAllDocumentsOfIndicesAs(new String[]{indexName}, type, query);
+    return getAllDocumentsOfIndicesAs(new String[] {indexName}, type, query);
   }
 
   private OptimizeIndexNameService getIndexNameService() {
@@ -753,7 +753,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
     try {
       return Long.valueOf(
               getOptimizeOpenSearchClient()
-                  .count(new String[]{PROCESS_INSTANCE_MULTI_ALIAS}, query))
+                  .count(new String[] {PROCESS_INSTANCE_MULTI_ALIAS}, query))
           .intValue();
     } catch (final IOException e) {
       throw new OptimizeIntegrationTestException(
@@ -768,7 +768,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
   }
 
   private void deleteIndexOfMapping(final IndexMappingCreator<IndexSettings.Builder> indexMapping) {
-    deleteIndices(new String[]{indexMapping.getIndexName()});
+    deleteIndices(new String[] {indexMapping.getIndexName()});
   }
 
   private void deleteIndices(final String[] indicesToDelete) {

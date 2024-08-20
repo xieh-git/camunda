@@ -1,4 +1,3 @@
-
 /*
  * Copyright Camunda Services GmbH and/or licensed to Camunda Services GmbH under
  * one or more contributor license agreements. See the NOTICE file distributed
@@ -14,8 +13,8 @@ public class EntityNameResponseDto {
   private String dashboardName;
   private String reportName;
 
-  public EntityNameResponseDto(final String collectionName, final String dashboardName,
-      final String reportName) {
+  public EntityNameResponseDto(
+      final String collectionName, final String dashboardName, final String reportName) {
     this.collectionName = collectionName;
     this.dashboardName = dashboardName;
     this.reportName = reportName;
@@ -78,19 +77,22 @@ public class EntityNameResponseDto {
     }
     final Object this$collectionName = getCollectionName();
     final Object other$collectionName = other.getCollectionName();
-    if (this$collectionName == null ? other$collectionName != null
+    if (this$collectionName == null
+        ? other$collectionName != null
         : !this$collectionName.equals(other$collectionName)) {
       return false;
     }
     final Object this$dashboardName = getDashboardName();
     final Object other$dashboardName = other.getDashboardName();
-    if (this$dashboardName == null ? other$dashboardName != null
+    if (this$dashboardName == null
+        ? other$dashboardName != null
         : !this$dashboardName.equals(other$dashboardName)) {
       return false;
     }
     final Object this$reportName = getReportName();
     final Object other$reportName = other.getReportName();
-    if (this$reportName == null ? other$reportName != null
+    if (this$reportName == null
+        ? other$reportName != null
         : !this$reportName.equals(other$reportName)) {
       return false;
     }
@@ -99,7 +101,12 @@ public class EntityNameResponseDto {
 
   @Override
   public String toString() {
-    return "EntityNameResponseDto(collectionName=" + getCollectionName() + ", dashboardName="
-        + getDashboardName() + ", reportName=" + getReportName() + ")";
+    return "EntityNameResponseDto(collectionName="
+        + getCollectionName()
+        + ", dashboardName="
+        + getDashboardName()
+        + ", reportName="
+        + getReportName()
+        + ")";
   }
 }

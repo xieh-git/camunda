@@ -63,17 +63,20 @@ import org.springframework.stereotype.Component;
 class ProcessInstanceRepositoryOS implements ProcessInstanceRepository {
 
   public static final String INDEX_NOT_FOUND_ERROR_MESSAGE_KEYWORD = "index_not_found_exception";
-  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
-      ProcessInstanceRepositoryOS.class);
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(ProcessInstanceRepositoryOS.class);
   private final ConfigurationService configurationService;
   private final OptimizeIndexNameService indexNameService;
   private final OptimizeOpenSearchClient osClient;
   private final ObjectMapper objectMapper;
   private final DateTimeFormatter dateTimeFormatter;
 
-  public ProcessInstanceRepositoryOS(final ConfigurationService configurationService,
-      final OptimizeIndexNameService indexNameService, final OptimizeOpenSearchClient osClient,
-      final ObjectMapper objectMapper, final DateTimeFormatter dateTimeFormatter) {
+  public ProcessInstanceRepositoryOS(
+      final ConfigurationService configurationService,
+      final OptimizeIndexNameService indexNameService,
+      final OptimizeOpenSearchClient osClient,
+      final ObjectMapper objectMapper,
+      final DateTimeFormatter dateTimeFormatter) {
     this.configurationService = configurationService;
     this.indexNameService = indexNameService;
     this.osClient = osClient;
@@ -121,11 +124,11 @@ class ProcessInstanceRepositoryOS implements ProcessInstanceRepository {
 
     try {
       return osClient
-          .search(
-              requestBuilder, Object.class, "Failed querying for started process instances!")
-          .hits()
-          .total()
-          .value()
+              .search(
+                  requestBuilder, Object.class, "Failed querying for started process instances!")
+              .hits()
+              .total()
+              .value()
           > 0;
     } catch (final OpenSearchException e) {
       if (e.getMessage().contains(INDEX_NOT_FOUND_ERROR_MESSAGE_KEYWORD)) {
@@ -142,9 +145,8 @@ class ProcessInstanceRepositoryOS implements ProcessInstanceRepository {
   public PageResultDto<String> getNextPageOfProcessInstanceIds(
       final PageResultDto<String> previousPage,
       final Supplier<PageResultDto<String>> firstPageFetchFunction) {
-    record Result(String processInstanceId) {
+    record Result(String processInstanceId) {}
 
-    }
     final int limit = previousPage.getLimit();
     if (previousPage.isLastPage()) {
       return new PageResultDto<>(limit);
@@ -219,9 +221,8 @@ class ProcessInstanceRepositoryOS implements ProcessInstanceRepository {
 
   private PageResultDto<String> getFirstPageOfProcessInstanceIdsForFilter(
       final String processDefinitionKey, final Query filterQuery, final Integer limit) {
-    record Result(String processInstanceId) {
+    record Result(String processInstanceId) {}
 
-    }
     final PageResultDto<String> result = new PageResultDto<>(limit);
     final Integer resolvedLimit = Optional.ofNullable(limit).orElse(MAX_RESPONSE_SIZE_LIMIT);
 

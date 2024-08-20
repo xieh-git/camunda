@@ -259,41 +259,6 @@ public class IngestionRestService {
     }
 
     @Override
-    public void addFirst(final E e) {
-      list.addFirst(e);
-    }
-
-    @Override
-    public void addLast(final E e) {
-      list.addLast(e);
-    }
-
-    @Override
-    public E getFirst() {
-      return list.getFirst();
-    }
-
-    @Override
-    public E getLast() {
-      return list.getLast();
-    }
-
-    @Override
-    public E removeFirst() {
-      return list.removeFirst();
-    }
-
-    @Override
-    public E removeLast() {
-      return list.removeLast();
-    }
-
-    @Override
-    public List<E> reversed() {
-      return list.reversed();
-    }
-
-    @Override
     public <T> T[] toArray(final IntFunction<T[]> generator) {
       return list.toArray(generator);
     }

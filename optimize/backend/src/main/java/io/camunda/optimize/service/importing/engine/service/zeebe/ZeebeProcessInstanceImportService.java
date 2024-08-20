@@ -45,8 +45,8 @@ public class ZeebeProcessInstanceImportService
           ProcessInstanceIntent.ELEMENT_ACTIVATING);
   private static final Set<BpmnElementType> TYPES_TO_IGNORE =
       Set.of(BpmnElementType.UNSPECIFIED, BpmnElementType.SEQUENCE_FLOW);
-  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
-      ZeebeProcessInstanceImportService.class);
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(ZeebeProcessInstanceImportService.class);
 
   public ZeebeProcessInstanceImportService(
       final ConfigurationService configurationService,

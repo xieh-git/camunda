@@ -27,7 +27,8 @@ public class AuthorizedEntitiesService {
   private final AbstractIdentityService identityService;
   private final ReportAuthorizationService reportAuthorizationService;
 
-  public AuthorizedEntitiesService(EntitiesReader entitiesReader,
+  public AuthorizedEntitiesService(
+      EntitiesReader entitiesReader,
       AbstractIdentityService identityService,
       ReportAuthorizationService reportAuthorizationService) {
     this.entitiesReader = entitiesReader;
