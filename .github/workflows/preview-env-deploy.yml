@@ -74,68 +74,14 @@ jobs:
         app_keycloak_url: https://keycloak-${{ steps.sanitize.outputs.branch_name }}.camunda.camunda.cloud/auth/realms/camunda-platform
         app_url: ${{ steps.sanitize.outputs.branch_name }}.camunda.camunda.cloud
 
-    - name: Setup Argo CD
-      shell: bash
-      if: ${{ steps.tool-cache-argocd.outputs.cache-hit != 'true' }}
-      run: |-
-        curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/${{ inputs.argocd_version }}/argocd-linux-amd64
-        chmod +x /usr/local/bin/argocd
-        argocd version
-      env:
-        ARGOCD_AUTH_TOKEN: ${{ steps.secrets.outputs.ARGOCD_DEV_TOKEN }}
-        ARGOCD_OPTS: "--grpc-web"
-        ARGOCD_SERVER: dev.argocd.int.camunda.com
-
-      #########################################################################
-      # Create a GitHub deployment that points to the URL we're going to deploy to.
-      # If a Pull Request exists, it will show the status of this deployment.
-    - uses: bobheadxi/deployments@v1.5.0
-      name: Create GitHub deployment
-      id: deployment
+    #########################################################################
+    # Create a preview environment
+    - name: Deploy Preview Environment for c8sm
+      uses: camunda/infra-global-github-actions/preview-env/create@main
       with:
-        step: start
-        token: "${{ github.token }}"
-        env: camunda-${{ steps.sanitize.outputs.branch_name }}
-        ref: ${{ env.BRANCH_NAME }}
-
-    - name: Deploy
-      shell: bash
-      run: |
-        max_retries=3
-        for attempt in $(seq "$max_retries"); do
-            argocd app create $ARGO_ARGUMENTS
-            if [ $? -eq 0 ]; then
-              echo "Creating Argo CD app with name $APP_NAME"
-              sleep 10
-
-              # Fetch app information to make sure the app is registered
-              app_info=$(argocd app get $APP_NAME --output json 2>/dev/null)
-              if [ $? -eq 0 ] && [ -n "$app_info" ]; then
-                echo "::group::app info"
-                echo "App Info: $app_info"
-                echo "::endgroup::"
-                echo "Syncing Argo CD app..."
-
-                argocd app sync $APP_NAME --async --force || true
-                break
-              else
-                echo "Attempt $attempt: Failed to get app information. Retrying..."
-                continue
-              fi
-            else
-              echo "Argo CD app creation failed on attempt $attempt."
-              if [ "$attempt" -eq "$max_retries" ]; then
-                  echo "Max retries reached. Exiting workflow."
-                  exit 1
-              else
-                  echo "Attempt $attempt: Retrying in 10 seconds..."
-                  sleep 10
-              fi
-            fi
-        done
-      env:
-        APP_NAME: camunda-${{ steps.sanitize.outputs.branch_name }}
-        ARGOCD_AUTH_TOKEN: ${{ steps.secrets.outputs.ARGOCD_DEV_TOKEN }}
-        ARGOCD_OPTS: "--grpc-web"
-        ARGOCD_SERVER: dev.argocd.int.camunda.com
-        ARGO_ARGUMENTS: ${{ env.argocd_arguments }}
+        revision: ${{ env.BRANCH_NAME }}
+        argocd_token: ${{ steps.secrets.outputs.ARGOCD_DEV_TOKEN }}
+        app_name: camunda-${{ steps.sanitize.outputs.branch_name }}
+        app_url: https://${{ steps.sanitize.outputs.branch_name }}.camunda.camunda.cloud
+        argocd_arguments: ${{ env.argocd_arguments }}
+        argocd_server: dev.argocd.int.camunda.com
