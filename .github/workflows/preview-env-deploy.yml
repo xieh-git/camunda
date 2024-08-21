@@ -79,7 +79,7 @@ jobs:
     #########################################################################
     # Create a preview environment
     - name: Deploy Preview Environment for c8sm
-      uses: camunda/infra-global-github-actions/preview-env/create@main
+      uses: camunda/infra-global-github-actions/preview-env/create@andreasbranch
       with:
         revision: ${{ env.BRANCH_NAME }}
         argocd_token: ${{ steps.secrets.outputs.ARGOCD_DEV_TOKEN }}
