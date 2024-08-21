@@ -306,6 +306,20 @@ const api = {
       },
     });
   },
+  uploadDocuments: ({files}: {files: File[]}) => {
+    const body = new FormData();
+
+    files.forEach((file) => body.append(file.name, file));
+
+    return new Request(getFullURL('/v2/documents'), {
+      ...BASE_REQUEST_OPTIONS,
+      method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 } as const;
 
 export {api};

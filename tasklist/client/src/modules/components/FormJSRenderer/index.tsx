@@ -7,7 +7,7 @@
  */
 
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {Layer} from '@carbon/react';
+import {FileUploader, Layer} from '@carbon/react';
 import {Variable} from 'modules/types';
 import {FormManager} from 'modules/formManager';
 import {mergeVariables} from './mergeVariables';
@@ -19,7 +19,7 @@ import '@bpmn-io/form-js-viewer/dist/assets/form-js-base.css';
 import '@bpmn-io/form-js-carbon-styles/src/carbon-styles.scss';
 
 type Props = {
-  handleSubmit: (variables: Variable[]) => Promise<void>;
+  handleSubmit: (variables: Variable[], files?: File[]) => Promise<void>;
   schema: string;
   data?: Record<string, unknown>;
   readOnly?: boolean;
@@ -107,6 +107,7 @@ const FormJSRenderer: React.FC<Props> = ({
   const [invalidFields, setInvalidFields] = useState<
     {ids: string[]; labels: string[]} | undefined
   >();
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const scrollToError = useScrollToError(formManagerRef.current);
 
   useEffect(() => {
@@ -142,7 +143,7 @@ const FormJSRenderer: React.FC<Props> = ({
               );
 
               try {
-                await handleSubmit(variables);
+                await handleSubmit(variables, selectedFiles);
                 onSubmitSuccess?.();
               } catch (error) {
                 onSubmitError?.(error);
@@ -175,6 +176,7 @@ const FormJSRenderer: React.FC<Props> = ({
     onValidationError,
     data,
     scrollToError,
+    selectedFiles,
   ]);
 
   useEffect(() => {
@@ -194,6 +196,26 @@ const FormJSRenderer: React.FC<Props> = ({
   return (
     <>
       <Layer className={styles.layer}>
+        <FileUploader
+          labelTitle="Upload files"
+          labelDescription="Max file size is 500mb. Only .jpg files are supported."
+          buttonLabel="Add file"
+          buttonKind="primary"
+          size="md"
+          filenameStatus="edit"
+          multiple={true}
+          disabled={false}
+          iconDescription="Delete file"
+          onChange={(event) => {
+            const files = event.target.files;
+
+            if (files === null || files.length === 0) {
+              return;
+            }
+
+            setSelectedFiles(Array.from(files));
+          }}
+        />
         <div ref={formContainerRef} className={styles.formRoot} />
       </Layer>
       {invalidFields !== undefined ? (
