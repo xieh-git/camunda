@@ -1,5 +1,5 @@
 ---
-# Default values for C8 Self-Managed Optimize Preview Environments
+# Default values for C8 Self-Managed Camunda Preview Environments
 
 ingress:
   # Defines the domain under which to expose the ingress
@@ -188,21 +188,21 @@ global:
   labels:
     camunda.cloud/source: argocd
     camunda.cloud/managed-by: Helm
-    app: optimize-camunda-cloud  # Should be overridden by Argo app
-    team: optimize
+    app: camunda-camunda-cloud  # Should be overridden by Argo app
+    team: camunda
   identity:
     auth:
       # # Identity.auth.enabled if true, enables the Identity authentication otherwise basic-auth will be used on all services.
       # enabled: false
 
       # will be set by the "deploy-preview-env" action
-      publicIssuerUrl: "https://keycloak-test.optimize.camunda.cloud/auth/realms/camunda-platform"
+      publicIssuerUrl: "https://keycloak-test.camunda.camunda.cloud/auth/realms/camunda-platform"
       operate:
-        redirectUrl: "https://test.optimize.camunda.cloud"
+        redirectUrl: "https://test.camunda.camunda.cloud"
       optimize:
-        redirectUrl: "https://test.optimize.camunda.cloud"
+        redirectUrl: "https://test.camunda.camunda.cloud"
       tasklist:
-        redirectUrl: "https://test.optimize.camunda.cloud"
+        redirectUrl: "https://test.camunda.camunda.cloud"
   image:
     pullSecrets:
     - name: dockerhub-registry
