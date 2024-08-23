@@ -46,6 +46,7 @@ import io.camunda.optimize.dto.optimize.rest.ConflictedItemType;
 import io.camunda.optimize.service.DefinitionService;
 import io.camunda.optimize.service.db.reader.ReportReader;
 import io.camunda.optimize.service.db.writer.ReportWriter;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.exceptions.OptimizeValidationException;
 import io.camunda.optimize.service.exceptions.UncombinableReportsException;
 import io.camunda.optimize.service.exceptions.conflict.OptimizeNonDefinitionScopeCompliantException;

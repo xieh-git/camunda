@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import java.io.IOException;
 import java.util.Base64;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;

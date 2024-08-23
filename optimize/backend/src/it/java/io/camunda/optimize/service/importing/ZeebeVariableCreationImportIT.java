@@ -27,6 +27,7 @@ import io.camunda.optimize.dto.optimize.query.variable.SimpleProcessVariableDto;
 import io.camunda.optimize.dto.zeebe.variable.ZeebeVariableRecordDto;
 import io.camunda.optimize.exception.OptimizeIntegrationTestException;
 import io.camunda.optimize.service.db.DatabaseConstants;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.test.it.extension.db.TermsQueryContainer;
 import io.camunda.zeebe.client.api.response.Process;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;

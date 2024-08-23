@@ -7,6 +7,7 @@
  */
 package io.camunda.optimize.rest;
 
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

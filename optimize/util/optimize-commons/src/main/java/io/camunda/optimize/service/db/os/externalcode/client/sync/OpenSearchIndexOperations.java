@@ -8,6 +8,7 @@
 package io.camunda.optimize.service.db.os.externalcode.client.sync;
 
 import io.camunda.optimize.service.db.schema.OptimizeIndexNameService;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;

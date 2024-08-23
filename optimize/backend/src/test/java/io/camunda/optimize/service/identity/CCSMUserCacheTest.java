@@ -19,6 +19,7 @@ import io.camunda.identity.sdk.Identity;
 import io.camunda.identity.sdk.users.Users;
 import io.camunda.identity.sdk.users.dto.User;
 import io.camunda.optimize.dto.optimize.UserDto;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.security.CCSMTokenService;
 import io.camunda.optimize.service.util.configuration.ConfigurationService;
 import java.lang.reflect.Field;

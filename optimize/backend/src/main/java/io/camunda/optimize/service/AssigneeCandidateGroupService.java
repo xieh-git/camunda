@@ -25,6 +25,7 @@ import io.camunda.optimize.dto.optimize.query.report.single.ReportDataDefinition
 import io.camunda.optimize.dto.optimize.query.report.single.SingleReportDataDto;
 import io.camunda.optimize.dto.optimize.query.report.single.process.SingleProcessReportDefinitionRequestDto;
 import io.camunda.optimize.service.db.reader.AssigneeAndCandidateGroupsReader;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.identity.UserTaskIdentityService;
 import io.camunda.optimize.service.report.ReportService;
 import io.camunda.optimize.service.security.util.definition.DataSourceDefinitionAuthorizationService;

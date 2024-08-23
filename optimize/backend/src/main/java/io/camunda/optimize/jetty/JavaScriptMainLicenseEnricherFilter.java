@@ -8,6 +8,7 @@
 package io.camunda.optimize.jetty;
 
 import com.google.common.io.CharStreams;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -95,7 +96,7 @@ public class JavaScriptMainLicenseEnricherFilter implements Filter {
     }
     try {
       return CharStreams.toString(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-    } catch (IOException e) {
+    } catch (final IOException e) {
       throw new OptimizeRuntimeException(e);
     }
   }

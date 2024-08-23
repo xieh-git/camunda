@@ -39,6 +39,7 @@ import io.camunda.optimize.dto.optimize.ZeebeConfigDto;
 import io.camunda.optimize.dto.optimize.datasource.EngineDataSourceDto;
 import io.camunda.optimize.dto.optimize.datasource.IngestedDataSourceDto;
 import io.camunda.optimize.service.exceptions.OptimizeConfigurationException;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.util.configuration.analytics.AnalyticsConfiguration;
 import io.camunda.optimize.service.util.configuration.archive.DataArchiveConfiguration;
 import io.camunda.optimize.service.util.configuration.cleanup.CleanupConfiguration;

@@ -33,6 +33,7 @@ import io.camunda.optimize.dto.optimize.DefinitionOptimizeResponseDto;
 import io.camunda.optimize.dto.optimize.DefinitionType;
 import io.camunda.optimize.dto.optimize.FlowNodeDataDto;
 import io.camunda.optimize.dto.optimize.ProcessDefinitionOptimizeDto;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.zeebe.client.api.response.Process;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;

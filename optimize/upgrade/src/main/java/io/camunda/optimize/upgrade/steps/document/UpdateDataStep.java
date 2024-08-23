@@ -8,6 +8,7 @@
 package io.camunda.optimize.upgrade.steps.document;
 
 import io.camunda.optimize.service.db.schema.IndexMappingCreator;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.upgrade.es.SchemaUpgradeClient;
 import io.camunda.optimize.upgrade.steps.UpgradeStep;
 import io.camunda.optimize.upgrade.steps.UpgradeStepType;

@@ -22,6 +22,7 @@ import static io.camunda.optimize.rest.UIConfigurationRestService.UI_CONFIGURATI
 import io.camunda.optimize.rest.security.AbstractSecurityConfigurerAdapter;
 import io.camunda.optimize.rest.security.CustomPreAuthenticatedAuthenticationProvider;
 import io.camunda.optimize.rest.security.oauth.AudienceValidator;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.security.AuthCookieService;
 import io.camunda.optimize.service.security.CCSMTokenService;
 import io.camunda.optimize.service.security.SessionService;
@@ -143,7 +144,7 @@ public class CCSMSecurityConfigurerAdapter extends AbstractSecurityConfigurerAda
                       .defaultAuthenticationEntryPointFor(
                           this::redirectToIdentity, new AntPathRequestMatcher("/**")))
           .build();
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new OptimizeRuntimeException(e);
     }
   }

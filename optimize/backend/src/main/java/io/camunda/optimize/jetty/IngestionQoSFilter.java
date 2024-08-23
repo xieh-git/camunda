@@ -7,6 +7,7 @@
  */
 package io.camunda.optimize.jetty;
 
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.AsyncEvent;
 import jakarta.servlet.AsyncListener;
@@ -162,9 +163,7 @@ public class IngestionQoSFilter implements Filter {
   }
 
   @Override
-  public void destroy() {
-  }  private final String suspended =
-      "IngestionQoSFilter@" + Integer.toHexString(hashCode()) + ".SUSPENDED";
+  public void destroy() {}
 
   private int getPriority(final ServletRequest request) {
     // We use the default prioritization for requests, as per the Jetty QoSFilter
@@ -180,6 +179,9 @@ public class IngestionQoSFilter implements Filter {
       }
     }
   }
+
+  private final String suspended =
+      "IngestionQoSFilter@" + Integer.toHexString(hashCode()) + ".SUSPENDED";
 
   private void setMaxRequests(final int value) {
     log.info("setting the max number of ingestion requests to {}", value);
@@ -238,9 +240,7 @@ public class IngestionQoSFilter implements Filter {
     if (!other.canEqual((Object) this)) {
       return false;
     }
-    if (suspended == null
-        ? other.suspended != null
-        : !suspended.equals(other.suspended)) {
+    if (suspended == null ? other.suspended != null : !suspended.equals(other.suspended)) {
       return false;
     }
     if (resumed == null ? other.resumed != null : !resumed.equals(other.resumed)) {
@@ -274,15 +274,24 @@ public class IngestionQoSFilter implements Filter {
 
   @Override
   public String toString() {
-    return "IngestionQoSFilter(suspended=" + suspended
-        + ", resumed=" + resumed
-        + ", waitMs=" + waitMs
-        + ", suspendMs=" + suspendMs
-        + ", maxRequests=" + maxRequests
-        + ", passes=" + passes
-        + ", queues=" + java.util.Arrays.deepToString(queues)
-        + ", listeners=" + java.util.Arrays.deepToString(listeners)
-        + ", maxRequestCountProvider=" + maxRequestCountProvider
+    return "IngestionQoSFilter(suspended="
+        + suspended
+        + ", resumed="
+        + resumed
+        + ", waitMs="
+        + waitMs
+        + ", suspendMs="
+        + suspendMs
+        + ", maxRequests="
+        + maxRequests
+        + ", passes="
+        + passes
+        + ", queues="
+        + java.util.Arrays.deepToString(queues)
+        + ", listeners="
+        + java.util.Arrays.deepToString(listeners)
+        + ", maxRequestCountProvider="
+        + maxRequestCountProvider
         + ")";
   }
 
@@ -295,8 +304,7 @@ public class IngestionQoSFilter implements Filter {
     }
 
     @Override
-    public void onComplete(final AsyncEvent event) throws IOException {
-    }
+    public void onComplete(final AsyncEvent event) throws IOException {}
 
     @Override
     public void onTimeout(final AsyncEvent event) throws IOException {
@@ -309,18 +317,12 @@ public class IngestionQoSFilter implements Filter {
     }
 
     @Override
-    public void onError(final AsyncEvent event) throws IOException {
-    }
+    public void onError(final AsyncEvent event) throws IOException {}
 
     @Override
-    public void onStartAsync(final AsyncEvent event) throws IOException {
-    }
+    public void onStartAsync(final AsyncEvent event) throws IOException {}
   }
-
-
 
   private final String resumed =
       "IngestionQoSFilter@" + Integer.toHexString(hashCode()) + ".RESUMED";
-
-
 }

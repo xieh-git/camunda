@@ -11,6 +11,7 @@ import static io.camunda.optimize.service.metadata.Version.getMajorAndMinor;
 import static io.camunda.optimize.service.util.DatabaseVersionChecker.checkESVersionSupport;
 
 import io.camunda.optimize.service.db.es.OptimizeElasticsearchClient;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.upgrade.exception.UpgradeRuntimeException;
 import java.io.IOException;
 import java.io.InputStream;

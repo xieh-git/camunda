@@ -34,6 +34,7 @@ import io.camunda.optimize.dto.optimize.rest.ConflictedItemDto;
 import io.camunda.optimize.dto.optimize.rest.ConflictedItemType;
 import io.camunda.optimize.service.db.reader.AlertReader;
 import io.camunda.optimize.service.db.writer.AlertWriter;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.exceptions.OptimizeValidationException;
 import io.camunda.optimize.service.relations.ReportReferencingService;
 import io.camunda.optimize.service.report.ReportService;

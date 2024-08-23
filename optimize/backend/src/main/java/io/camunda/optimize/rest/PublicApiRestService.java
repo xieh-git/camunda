@@ -22,6 +22,7 @@ import io.camunda.optimize.service.SettingsService;
 import io.camunda.optimize.service.dashboard.DashboardService;
 import io.camunda.optimize.service.entities.EntityExportService;
 import io.camunda.optimize.service.entities.EntityImportService;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.export.JsonReportResultExportService;
 import io.camunda.optimize.service.report.ReportService;
 import io.camunda.optimize.service.variable.ProcessVariableLabelService;

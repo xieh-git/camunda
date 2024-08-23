@@ -9,6 +9,7 @@ package io.camunda.optimize.service.db.es;
 
 import io.camunda.optimize.service.db.es.schema.ElasticSearchSchemaManager;
 import io.camunda.optimize.service.db.schema.OptimizeIndexNameService;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.util.BackoffCalculator;
 import io.camunda.optimize.service.util.configuration.ConfigurationService;
 import io.camunda.optimize.service.util.configuration.condition.ElasticSearchCondition;
@@ -51,7 +52,7 @@ public class OptimizeElasticsearchClientConfiguration {
           optimizeIndexNameService,
           elasticSearchSchemaManager,
           backoffCalculator);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       throw new OptimizeRuntimeException(e);
     }
   }

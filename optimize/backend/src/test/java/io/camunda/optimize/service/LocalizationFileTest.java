@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,7 +62,7 @@ public class LocalizationFileTest {
               .getClassLoader()
               .getResourceAsStream(LocalizationService.LOCALIZATION_PATH + locale + ".json"),
           Map.class);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       throw new OptimizeRuntimeException(e);
     }
   }

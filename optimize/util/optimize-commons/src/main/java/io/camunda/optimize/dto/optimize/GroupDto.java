@@ -8,6 +8,7 @@
 package io.camunda.optimize.dto.optimize;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;

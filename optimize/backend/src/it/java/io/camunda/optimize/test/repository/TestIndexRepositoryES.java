@@ -8,6 +8,7 @@
 package io.camunda.optimize.test.repository;
 
 import io.camunda.optimize.service.db.es.OptimizeElasticsearchClient;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.util.configuration.condition.ElasticSearchCondition;
 import java.io.IOException;
 import java.util.Set;

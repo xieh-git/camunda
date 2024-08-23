@@ -34,6 +34,7 @@ import io.camunda.optimize.service.db.schema.DatabaseSchemaManager;
 import io.camunda.optimize.service.db.schema.OptimizeIndexNameService;
 import io.camunda.optimize.service.db.writer.InstantDashboardMetadataWriter;
 import io.camunda.optimize.service.digest.DigestService;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.importing.AbstractImportScheduler;
 import io.camunda.optimize.service.importing.ImportIndexHandlerRegistry;
 import io.camunda.optimize.service.importing.ImportSchedulerManagerService;
@@ -77,8 +78,8 @@ public class EmbeddedOptimizeExtension
   private static final ObjectMapper configObjectMapper =
       new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module());
   private static String serializedDefaultConfiguration;
-  private static final Logger log =
-      org.slf4j.LoggerFactory.getLogger(EmbeddedOptimizeExtension.class);
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
+      EmbeddedOptimizeExtension.class);
   private final boolean beforeAllMode;
   private ApplicationContext applicationContext;
   private OptimizeRequestExecutor requestExecutor;
@@ -148,10 +149,10 @@ public class EmbeddedOptimizeExtension
       objectMapper = getBean(ObjectMapper.class);
       requestExecutor =
           new OptimizeRequestExecutor(
-                  DEFAULT_USERNAME,
-                  DEFAULT_PASSWORD,
-                  IntegrationTestConfigurationUtil.getEmbeddedOptimizeRestApiEndpoint(
-                      applicationContext))
+              DEFAULT_USERNAME,
+              DEFAULT_PASSWORD,
+              IntegrationTestConfigurationUtil.getEmbeddedOptimizeRestApiEndpoint(
+                  applicationContext))
               .initAuthCookie();
       if (isResetImportOnStart()) {
         resetPositionBasedImportStartIndexes();
@@ -240,7 +241,7 @@ public class EmbeddedOptimizeExtension
     try {
       scheduler.runImportRound(true).get();
     } catch (final InterruptedException | ExecutionException e) {
-      throw new OptimizeRuntimeException(e);
+      throw new RuntimeException(e);
     }
   }
 
@@ -260,8 +261,8 @@ public class EmbeddedOptimizeExtension
           .orElseThrow(() -> new OptimizeIntegrationTestException("No Zeebe Scheduler present"))
           .runImportRound(true)
           .get();
-    } catch (final InterruptedException | ExecutionException e) {
-      throw new OptimizeRuntimeException(e);
+    } catch (InterruptedException | ExecutionException e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -491,7 +492,7 @@ public class EmbeddedOptimizeExtension
     try {
       return getObjectMapper().writeValueAsString(object);
     } catch (JsonProcessingException e) {
-      throw new OptimizeRuntimeException(e);
+      throw new RuntimeException(e);
     }
   }
 

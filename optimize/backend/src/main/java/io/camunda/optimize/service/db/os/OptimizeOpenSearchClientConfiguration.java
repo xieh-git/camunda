@@ -9,6 +9,7 @@ package io.camunda.optimize.service.db.os;
 
 import io.camunda.optimize.service.db.os.schema.OpenSearchSchemaManager;
 import io.camunda.optimize.service.db.schema.OptimizeIndexNameService;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.service.util.BackoffCalculator;
 import io.camunda.optimize.service.util.configuration.ConfigurationService;
 import io.camunda.optimize.service.util.configuration.condition.OpenSearchCondition;

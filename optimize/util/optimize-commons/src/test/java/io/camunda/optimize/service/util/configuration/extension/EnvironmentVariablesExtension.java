@@ -10,6 +10,7 @@ package io.camunda.optimize.service.util.configuration.extension;
 import static java.lang.Class.forName;
 import static java.lang.System.getenv;
 
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,7 +104,8 @@ public class EnvironmentVariablesExtension implements BeforeEachCallback, AfterE
     try {
       return getFieldValue(classOfMap, getenv(), "m");
     } catch (final IllegalAccessException e) {
-      throw new OptimizeRuntimeException("Cannot access the field 'm' of the map System.getenv().", e);
+      throw new OptimizeRuntimeException(
+          "Cannot access the field 'm' of the map System.getenv().", e);
     } catch (final NoSuchFieldException e) {
       throw new OptimizeRuntimeException(
           "Expecting System.getenv() to have a field 'm' but it has not.", e);

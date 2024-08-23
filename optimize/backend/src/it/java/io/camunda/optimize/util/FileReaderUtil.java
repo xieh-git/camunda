@@ -7,6 +7,7 @@
  */
 package io.camunda.optimize.util;
 
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;

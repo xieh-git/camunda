@@ -22,6 +22,7 @@ import io.camunda.optimize.dto.optimize.query.variable.ProcessVariableNameRespon
 import io.camunda.optimize.dto.optimize.query.variable.ProcessVariableReportValuesRequestDto;
 import io.camunda.optimize.dto.optimize.query.variable.ProcessVariableValueRequestDto;
 import io.camunda.optimize.rest.optimize.dto.VariableDto;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.text.SimpleDateFormat;
@@ -121,7 +122,7 @@ public class VariablesClient {
   public VariableDto createNativeJsonVariableDto(final Map<String, Object> variable) {
     try {
       return createNativeJsonVariableDto(objectMapper.writeValueAsString(variable));
-    } catch (JsonProcessingException e) {
+    } catch (final JsonProcessingException e) {
       throw new OptimizeRuntimeException(e);
     }
   }
@@ -129,7 +130,7 @@ public class VariablesClient {
   public VariableDto createNativeJsonVariableDto(final List<Object> variable) {
     try {
       return createNativeJsonVariableDto(objectMapper.writeValueAsString(variable));
-    } catch (JsonProcessingException e) {
+    } catch (final JsonProcessingException e) {
       throw new OptimizeRuntimeException(e);
     }
   }

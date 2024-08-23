@@ -9,6 +9,7 @@ package io.camunda.optimize.jetty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.optimize.dto.optimize.rest.ErrorResponseDto;
+import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -94,7 +95,7 @@ public class MaxRequestSizeFilter implements Filter {
           .getWriter()
           .write(
               objectMapperProvider.call().writeValueAsString(new ErrorResponseDto(errorMessage)));
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new OptimizeRuntimeException(e);
     }
     httpResponse.setStatus(statusCode);
