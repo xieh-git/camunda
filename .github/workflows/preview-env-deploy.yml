@@ -69,7 +69,7 @@ jobs:
           --revision ${revision} \
           --upsert" >> $GITHUB_ENV
       env:
-        docker_tag: "pr-dce606a0185e3306afa357ba9fbd33a83b001b04" # commit id of latest PR event
+        docker_tag: "pr-1882c176b432bd532dac75c460ef95cbfc281cab" # commit id of latest PR event
         revision: ${{ env.BRANCH_NAME }}
         app_name: camunda-${{ steps.sanitize.outputs.branch_name }}
         elasticsearch_image_tag: "8.13.4"
