@@ -18,10 +18,7 @@ import io.camunda.operate.property.ElasticsearchProperties;
 import io.camunda.operate.property.OperateProperties;
 import io.camunda.operate.property.SslProperties;
 import io.camunda.operate.util.RetryOperation;
-import io.camunda.plugin.search.header.DatabaseCustomHeaderSupplier;
-import io.camunda.zeebe.util.ReflectUtil;
-import io.camunda.zeebe.util.jar.ExternalJarClassLoader;
-import io.camunda.zeebe.util.jar.ThreadContextUtil;
+import io.camunda.search.connect.plugin.PluginRepository;
 import jakarta.annotation.PreDestroy;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -29,7 +26,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -40,7 +36,6 @@ import java.security.cert.CertificateFactory;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -68,9 +63,20 @@ public class ElasticsearchConnector {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchConnector.class);
 
-  @Autowired private OperateProperties operateProperties;
+  private final OperateProperties operateProperties;
+  private final PluginRepository esClientRepository;
+  private final PluginRepository zeebeEsClientRepository;
 
   private ElasticsearchClient elasticsearchClient;
+
+  @Autowired
+  public ElasticsearchConnector(final OperateProperties operateProperties) {
+    this.operateProperties = operateProperties;
+    esClientRepository =
+        new PluginRepository().load(operateProperties.getElasticsearch().getPlugins());
+    zeebeEsClientRepository =
+        new PluginRepository().load(operateProperties.getZeebeElasticsearch().getPlugins());
+  }
 
   public static void closeEsClient(final RestHighLevelClient esClient) {
     if (esClient != null) {
@@ -100,7 +106,8 @@ public class ElasticsearchConnector {
     final RestClient restClient =
         restClientBuilder
             .setHttpClientConfigCallback(
-                httpClientBuilder -> configureHttpClient(httpClientBuilder, elsConfig))
+                httpClientBuilder ->
+                    configureHttpClient(httpClientBuilder, elsConfig, esClientRepository))
             .build();
 
     // Create the transport with a Jackson mapper
@@ -148,7 +155,7 @@ public class ElasticsearchConnector {
     // some weird error when ELS sets available processors number for Netty - see
     // https://discuss.elastic.co/t/elasticsearch-5-4-1-availableprocessors-is-already-set/88036/3
     System.setProperty("es.set.netty.runtime.available.processors", "false");
-    return createEsClient(operateProperties.getElasticsearch());
+    return createEsClient(operateProperties.getElasticsearch(), esClientRepository);
   }
 
   @Bean("zeebeEsClient")
@@ -156,7 +163,7 @@ public class ElasticsearchConnector {
     // some weird error when ELS sets available processors number for Netty - see
     // https://discuss.elastic.co/t/elasticsearch-5-4-1-availableprocessors-is-already-set/88036/3
     System.setProperty("es.set.netty.runtime.available.processors", "false");
-    return createEsClient(operateProperties.getZeebeElasticsearch());
+    return createEsClient(operateProperties.getZeebeElasticsearch(), zeebeEsClientRepository);
   }
 
   @PreDestroy
@@ -170,12 +177,14 @@ public class ElasticsearchConnector {
     }
   }
 
-  public RestHighLevelClient createEsClient(final ElasticsearchProperties elsConfig) {
+  public RestHighLevelClient createEsClient(
+      final ElasticsearchProperties elsConfig, final PluginRepository pluginRepository) {
     LOGGER.debug("Creating Elasticsearch connection...");
     final RestClientBuilder restClientBuilder =
         RestClient.builder(getHttpHost(elsConfig))
             .setHttpClientConfigCallback(
-                httpClientBuilder -> configureHttpClient(httpClientBuilder, elsConfig));
+                httpClientBuilder ->
+                    configureHttpClient(httpClientBuilder, elsConfig, pluginRepository));
     if (elsConfig.getConnectTimeout() != null || elsConfig.getSocketTimeout() != null) {
       restClientBuilder.setRequestConfigCallback(
           configCallback -> setTimeouts(configCallback, elsConfig));
@@ -194,59 +203,18 @@ public class ElasticsearchConnector {
 
   protected HttpAsyncClientBuilder configureHttpClient(
       final HttpAsyncClientBuilder httpAsyncClientBuilder,
-      final ElasticsearchProperties elsConfig) {
+      final ElasticsearchProperties elsConfig,
+      final PluginRepository pluginRepository) {
     setupAuthentication(httpAsyncClientBuilder, elsConfig);
 
-    LOGGER.trace("Attempt to load interceptor plugins");
-    if (elsConfig.getInterceptorPlugins() != null) {
-      loadInterceptorPlugins(httpAsyncClientBuilder, elsConfig);
+    if (!pluginRepository.isEmpty()) {
+      httpAsyncClientBuilder.addInterceptorLast(pluginRepository.asRequestInterceptor());
     }
 
     if (elsConfig.getSsl() != null) {
       setupSSLContext(httpAsyncClientBuilder, elsConfig.getSsl());
     }
     return httpAsyncClientBuilder;
-  }
-
-  private void loadInterceptorPlugins(
-      final HttpAsyncClientBuilder httpAsyncClientBuilder,
-      final ElasticsearchProperties elsConfig) {
-    LOGGER.trace("Plugins detected to be not empty {}", elsConfig.getInterceptorPlugins());
-
-    final var interceptors = elsConfig.getInterceptorPlugins();
-    interceptors.forEach(
-        (id, interceptor) -> {
-          LOGGER.trace("Attempting to register {}", interceptor.getId());
-          try {
-            // WARNING! Due to the nature of interceptors, by the moment they (interceptors)
-            // are executed, the below class loader will close the JAR file hence
-            // to avoid NoClassDefFoundError we must not close this class loader.
-            final var classLoader =
-                ExternalJarClassLoader.ofPath(Paths.get(interceptor.getJarPath()));
-
-            final var pluginClass = classLoader.loadClass(interceptor.getClassName());
-            final var plugin = ReflectUtil.newInstance(pluginClass);
-
-            if (plugin instanceof final DatabaseCustomHeaderSupplier dchs) {
-              LOGGER.trace(
-                  "Plugin {} appears to be a DB Header Provider. Registering with interceptor",
-                  interceptor.getId());
-              httpAsyncClientBuilder.addInterceptorLast(
-                  (HttpRequestInterceptor)
-                      (httpRequest, httpContext) -> {
-                        final var customHeader =
-                            ThreadContextUtil.supplyWithClassLoader(
-                                dchs::getElasticsearchCustomHeader, classLoader);
-                        httpRequest.addHeader(customHeader.key(), customHeader.value());
-                      });
-            } else {
-              throw new RuntimeException(
-                  "Unknown type of interceptor plugin or wrong class specified");
-            }
-          } catch (final Exception e) {
-            throw new RuntimeException("Failed to load interceptor plugin due to exception", e);
-          }
-        });
   }
 
   private void setupSSLContext(

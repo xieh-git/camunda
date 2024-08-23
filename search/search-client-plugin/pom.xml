@@ -5,17 +5,13 @@
 
   <parent>
     <groupId>io.camunda</groupId>
-    <artifactId>zeebe-parent</artifactId>
+    <artifactId>camunda-search</artifactId>
     <version>8.6.0-SNAPSHOT</version>
-    <relativePath>../parent/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>camunda-search-plugins</artifactId>
-  <version>8.6.0-SNAPSHOT</version>
+  <artifactId>camunda-search-client-plugin</artifactId>
   <packaging>jar</packaging>
-
-  <name>Camunda Search Plugins</name>
-  <description>${project.name}</description>
-  <inceptionYear>2024</inceptionYear>
+  <name>Camunda Search Client Plugin</name>
 
 </project>

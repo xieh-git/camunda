@@ -10,8 +10,10 @@ package io.camunda.operate.schema.util.elasticsearch;
 import io.camunda.operate.conditions.ElasticsearchCondition;
 import io.camunda.operate.connect.ElasticsearchConnector;
 import io.camunda.operate.property.ElasticsearchProperties;
+import io.camunda.operate.property.OperateProperties;
 import io.camunda.operate.schema.util.ObservableConnector;
 import io.camunda.operate.schema.util.ObservableConnector.OperateTestHttpRequest;
+import io.camunda.search.connect.plugin.PluginRepository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.RequestLine;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.protocol.HttpContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 
 @Conditional(ElasticsearchCondition.class)
@@ -30,6 +33,11 @@ public class TestElasticsearchConnector extends ElasticsearchConnector
 
   private final List<Consumer<OperateTestHttpRequest>> requestListeners = new ArrayList<>();
 
+  @Autowired
+  public TestElasticsearchConnector(final OperateProperties operateProperties) {
+    super(operateProperties);
+  }
+
   /**
    * Adds a request interceptor that a test case can plug in, so that we can assert requests made to
    * Elasticsearch
@@ -37,7 +45,8 @@ public class TestElasticsearchConnector extends ElasticsearchConnector
   @Override
   protected HttpAsyncClientBuilder configureHttpClient(
       final HttpAsyncClientBuilder httpAsyncClientBuilder,
-      final ElasticsearchProperties elsConfig) {
+      final ElasticsearchProperties elsConfig,
+      final PluginRepository pluginRepository) {
     httpAsyncClientBuilder.addInterceptorFirst(
         new HttpRequestInterceptor() {
 
@@ -63,7 +72,7 @@ public class TestElasticsearchConnector extends ElasticsearchConnector
                         }));
           }
         });
-    return super.configureHttpClient(httpAsyncClientBuilder, elsConfig);
+    return super.configureHttpClient(httpAsyncClientBuilder, elsConfig, pluginRepository);
   }
 
   @Override

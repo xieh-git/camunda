@@ -10,9 +10,10 @@ package io.camunda.operate.property;
 import static io.camunda.operate.util.ConversionUtils.stringIsEmpty;
 
 import io.camunda.operate.connect.OperateDateTimeFormatter;
+import io.camunda.search.connect.plugin.PluginConfiguration;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.util.List;
 import java.util.function.Function;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -45,8 +46,7 @@ public class ElasticsearchProperties {
   private int bulkRequestMaxSizeInBytes = BULK_REQUEST_MAX_SIZE_IN_BYTES_DEFAULT;
 
   @NestedConfigurationProperty private SslProperties ssl;
-
-  @NestedConfigurationProperty private Map<String, InterceptorPluginProperty> interceptorPlugins;
+  @NestedConfigurationProperty private List<PluginConfiguration> plugins;
 
   public String getClusterName() {
     return clusterName;
@@ -178,12 +178,11 @@ public class ElasticsearchProperties {
     this.bulkRequestMaxSizeInBytes = bulkRequestMaxSizeInBytes;
   }
 
-  public Map<String, InterceptorPluginProperty> getInterceptorPlugins() {
-    return interceptorPlugins;
+  public List<PluginConfiguration> getPlugins() {
+    return plugins;
   }
 
-  public void setInterceptorPlugins(
-      final Map<String, InterceptorPluginProperty> interceptorPlugins) {
-    this.interceptorPlugins = interceptorPlugins;
+  public void setPlugins(final List<PluginConfiguration> plugins) {
+    this.plugins = plugins;
   }
 }

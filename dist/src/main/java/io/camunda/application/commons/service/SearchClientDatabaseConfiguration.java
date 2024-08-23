@@ -12,6 +12,7 @@ import io.camunda.search.clients.CamundaSearchClient;
 import io.camunda.search.connect.SearchClientProvider;
 import io.camunda.search.connect.SearchClientProvider.SearchClientProviders;
 import io.camunda.search.connect.configuration.ConnectConfiguration;
+import io.camunda.search.connect.plugin.PluginRepository;
 import io.camunda.zeebe.gateway.rest.ConditionalOnRestGatewayEnabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,11 +26,13 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(SearchClientProperties.class)
 public class SearchClientDatabaseConfiguration {
 
+  private final PluginRepository pluginRepository = new PluginRepository();
   private final ConnectConfiguration configuration;
 
   @Autowired
   public SearchClientDatabaseConfiguration(final SearchClientProperties configuration) {
     this.configuration = configuration;
+    pluginRepository.load(configuration.getPlugins());
   }
 
   @Bean
@@ -49,8 +52,14 @@ public class SearchClientDatabaseConfiguration {
   }
 
   @Bean
-  public CamundaSearchClient camundaSearchClient(final SearchClientProvider searchClientProvider) {
-    return searchClientProvider.apply(configuration);
+  public CamundaSearchClient camundaSearchClient(
+      final SearchClientProvider searchClientProvider, final PluginRepository pluginRepository) {
+    return searchClientProvider.apply(configuration, pluginRepository);
+  }
+
+  @Bean
+  public PluginRepository pluginRepository() {
+    return pluginRepository;
   }
 
   @ConfigurationProperties("camunda.database")

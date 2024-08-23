@@ -58,10 +58,17 @@ class ElasticsearchClient implements AutoCloseable {
 
   ElasticsearchClient(
       final ElasticsearchExporterConfiguration configuration, final MeterRegistry meterRegistry) {
+    this(configuration, meterRegistry, RestClientFactory.of(configuration));
+  }
+
+  ElasticsearchClient(
+      final ElasticsearchExporterConfiguration configuration,
+      final MeterRegistry meterRegistry,
+      final RestClient restClient) {
     this(
         configuration,
         new BulkIndexRequest(),
-        RestClientFactory.of(configuration),
+        restClient,
         new RecordIndexRouter(configuration.index),
         new TemplateReader(configuration),
         null,

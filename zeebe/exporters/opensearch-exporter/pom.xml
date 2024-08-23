@@ -28,7 +28,7 @@
 
     <dependency>
       <groupId>io.camunda</groupId>
-      <artifactId>camunda-search-plugins</artifactId>
+      <artifactId>camunda-search-client-plugin</artifactId>
     </dependency>
 
     <dependency>
@@ -104,6 +104,11 @@
     <dependency>
       <groupId>io.github.acm19</groupId>
       <artifactId>aws-request-signing-apache-interceptor</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.camunda</groupId>
+      <artifactId>camunda-search-client-connect</artifactId>
     </dependency>
 
     <!-- Test dependencies -->
@@ -189,6 +194,12 @@
     <dependency>
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wiremock</groupId>
+      <artifactId>wiremock</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

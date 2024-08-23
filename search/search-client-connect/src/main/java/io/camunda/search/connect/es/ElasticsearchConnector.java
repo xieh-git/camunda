@@ -15,9 +15,11 @@ import io.camunda.search.connect.SearchClientConnectException;
 import io.camunda.search.connect.configuration.ConnectConfiguration;
 import io.camunda.search.connect.configuration.SecurityConfiguration;
 import io.camunda.search.connect.jackson.JacksonConfiguration;
+import io.camunda.search.connect.plugin.PluginRepository;
 import io.camunda.search.connect.util.SecurityUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -35,15 +37,24 @@ public final class ElasticsearchConnector {
 
   private final ConnectConfiguration configuration;
   private final ObjectMapper objectMapper;
+  private final PluginRepository pluginRepository;
 
-  public ElasticsearchConnector(final ConnectConfiguration configuration) {
-    this(configuration, new JacksonConfiguration(configuration).createObjectMapper());
+  public ElasticsearchConnector(
+      final ConnectConfiguration configuration, final PluginRepository pluginRepository) {
+    this(
+        configuration,
+        new JacksonConfiguration(configuration).createObjectMapper(),
+        pluginRepository);
   }
 
   public ElasticsearchConnector(
-      final ConnectConfiguration configuration, final ObjectMapper objectMapper) {
+      final ConnectConfiguration configuration,
+      final ObjectMapper objectMapper,
+      final PluginRepository pluginRepository) {
     this.configuration = configuration;
     this.objectMapper = objectMapper;
+    this.pluginRepository =
+        Objects.requireNonNull(pluginRepository, "must specify a plugin repository");
   }
 
   public ElasticsearchClient createClient() {
@@ -84,6 +95,8 @@ public final class ElasticsearchConnector {
     if (security != null && security.isEnabled()) {
       setupSSLContext(httpAsyncClientBuilder, security);
     }
+
+    httpAsyncClientBuilder.addInterceptorLast(pluginRepository.asRequestInterceptor());
     return httpAsyncClientBuilder;
   }
 
@@ -96,7 +109,7 @@ public final class ElasticsearchConnector {
       if (!configuration.isVerifyHostname()) {
         httpAsyncClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
       }
-    } catch (Exception e) {
+    } catch (final Exception e) {
       LOGGER.error("Error in setting up SSLContext", e);
     }
   }
@@ -115,7 +128,7 @@ public final class ElasticsearchConnector {
     try {
       final var uri = new URI(elsConfig.getUrl());
       return new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-    } catch (URISyntaxException e) {
+    } catch (final URISyntaxException e) {
       throw new SearchClientConnectException("Error in url: " + elsConfig.getUrl(), e);
     }
   }

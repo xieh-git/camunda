@@ -14,9 +14,11 @@ import io.camunda.search.connect.configuration.ConnectConfiguration;
 import io.camunda.search.connect.configuration.SecurityConfiguration;
 import io.camunda.search.connect.jackson.JacksonConfiguration;
 import io.camunda.search.connect.os.json.SearchRequestJacksonJsonpMapperWrapper;
+import io.camunda.search.connect.plugin.PluginRepository;
 import io.camunda.search.connect.util.SecurityUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.config.RequestConfig;
@@ -45,15 +47,24 @@ public final class OpensearchConnector {
 
   private final ConnectConfiguration configuration;
   private final ObjectMapper objectMapper;
+  private final PluginRepository pluginRepository;
 
-  public OpensearchConnector(final ConnectConfiguration configuration) {
-    this(configuration, new JacksonConfiguration(configuration).createObjectMapper());
+  public OpensearchConnector(
+      final ConnectConfiguration configuration, final PluginRepository pluginRepository) {
+    this(
+        configuration,
+        new JacksonConfiguration(configuration).createObjectMapper(),
+        pluginRepository);
   }
 
   public OpensearchConnector(
-      final ConnectConfiguration configuration, final ObjectMapper objectMapper) {
+      final ConnectConfiguration configuration,
+      final ObjectMapper objectMapper,
+      final PluginRepository pluginRepository) {
     this.configuration = configuration;
     this.objectMapper = objectMapper;
+    this.pluginRepository =
+        Objects.requireNonNull(pluginRepository, "must specify a plugin repository");
   }
 
   public OpenSearchClient createClient() {
@@ -115,7 +126,7 @@ public final class OpensearchConnector {
       credentialsProvider.resolveCredentials();
       LOGGER.info("AWS Credentials can be resolved. Use AWS Opensearch");
       return true;
-    } catch (Exception e) {
+    } catch (final Exception e) {
       LOGGER.warn("AWS not configured due to: {} ", e.getMessage());
       return false;
     }
@@ -125,7 +136,7 @@ public final class OpensearchConnector {
     try {
       final var uri = new URI(osConfig.getUrl());
       return new HttpHost(uri.getScheme(), uri.getHost(), uri.getPort());
-    } catch (URISyntaxException e) {
+    } catch (final URISyntaxException e) {
       throw new SearchClientConnectException("Error in url: " + osConfig.getUrl(), e);
     }
   }
@@ -136,6 +147,7 @@ public final class OpensearchConnector {
     if (osConfig.getSecurity() != null && osConfig.getSecurity().isEnabled()) {
       setupSSLContext(httpAsyncClientBuilder, osConfig.getSecurity());
     }
+    httpAsyncClientBuilder.addRequestInterceptorLast(pluginRepository.asRequestInterceptor());
     return httpAsyncClientBuilder;
   }
 
@@ -190,7 +202,7 @@ public final class OpensearchConnector {
 
       httpAsyncClientBuilder.setConnectionManager(connectionManager);
 
-    } catch (Exception e) {
+    } catch (final Exception e) {
       LOGGER.error("Error in setting up SSLContext", e);
     }
   }

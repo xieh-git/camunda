@@ -13,6 +13,7 @@ import io.camunda.operate.connect.OpensearchConnector;
 import io.camunda.operate.property.OpensearchProperties;
 import io.camunda.operate.property.OperateProperties;
 import io.camunda.operate.schema.util.ObservableConnector;
+import io.camunda.search.connect.plugin.PluginRepository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ import org.springframework.context.annotation.Conditional;
 @Conditional(OpensearchCondition.class)
 public class TestOpenSearchConnector extends OpensearchConnector implements ObservableConnector {
 
-  private List<Consumer<OperateTestHttpRequest>> requestListeners = new ArrayList<>();
+  private final List<Consumer<OperateTestHttpRequest>> requestListeners = new ArrayList<>();
 
   public TestOpenSearchConnector(
       final OperateProperties operateProperties, final ObjectMapper objectMapper) {
@@ -40,12 +41,17 @@ public class TestOpenSearchConnector extends OpensearchConnector implements Obse
    */
   @Override
   protected HttpAsyncClientBuilder configureHttpClient(
-      HttpAsyncClientBuilder httpAsyncClientBuilder, OpensearchProperties elsConfig) {
+      final HttpAsyncClientBuilder httpAsyncClientBuilder,
+      final OpensearchProperties elsConfig,
+      final PluginRepository pluginRepository) {
     httpAsyncClientBuilder.addRequestInterceptorFirst(
         new HttpRequestInterceptor() {
 
           @Override
-          public void process(HttpRequest request, EntityDetails entityDetails, HttpContext context)
+          public void process(
+              final HttpRequest request,
+              final EntityDetails entityDetails,
+              final HttpContext context)
               throws IOException {
             requestListeners.forEach(
                 listener ->
@@ -64,14 +70,16 @@ public class TestOpenSearchConnector extends OpensearchConnector implements Obse
                         }));
           }
         });
-    return super.configureHttpClient(httpAsyncClientBuilder, elsConfig);
+    return super.configureHttpClient(httpAsyncClientBuilder, elsConfig, pluginRepository);
   }
 
-  public void addRequestListener(Consumer<OperateTestHttpRequest> listener) {
-    this.requestListeners.add(listener);
+  @Override
+  public void addRequestListener(final Consumer<OperateTestHttpRequest> listener) {
+    requestListeners.add(listener);
   }
 
+  @Override
   public void clearRequestListeners() {
-    this.requestListeners.clear();
+    requestListeners.clear();
   }
 }

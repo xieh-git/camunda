@@ -33,7 +33,7 @@
 
     <dependency>
       <groupId>io.camunda</groupId>
-      <artifactId>camunda-search-plugins</artifactId>
+      <artifactId>camunda-search-client-plugin</artifactId>
     </dependency>
 
     <dependency>
@@ -278,6 +278,10 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.camunda</groupId>
+      <artifactId>camunda-search-client-connect</artifactId>
     </dependency>
 
   </dependencies>

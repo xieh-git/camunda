@@ -5,10 +5,12 @@
  * Licensed under the Camunda License 1.0. You may not use this file
  * except in compliance with the Camunda License 1.0.
  */
-package io.camunda.plugin.search.header;
+package io.camunda.search.connect.plugin;
 
-public interface DatabaseCustomHeaderSupplier {
+public class PluginLoadException extends RuntimeException {
+  private static final String MESSAGE_FORMAT = "Failed to load plugin [%s]: %s";
 
-  /** Fetches any additional headers to be used in requests to ElasticSearch or OpenSearch */
-  CustomHeader getElasticsearchCustomHeader();
+  public PluginLoadException(final String id, final String reason, final Throwable cause) {
+    super(String.format(MESSAGE_FORMAT, id, reason), cause);
+  }
 }

@@ -52,17 +52,12 @@ public class OpensearchClient implements AutoCloseable {
 
   private OpensearchMetrics metrics;
 
-  OpensearchClient(final OpensearchExporterConfiguration configuration) {
-    this(configuration, new BulkIndexRequest());
-  }
-
   OpensearchClient(
-      final OpensearchExporterConfiguration configuration,
-      final BulkIndexRequest bulkIndexRequest) {
+      final OpensearchExporterConfiguration configuration, final RestClient restClient) {
     this(
         configuration,
-        bulkIndexRequest,
-        RestClientFactory.of(configuration),
+        new BulkIndexRequest(),
+        restClient,
         new RecordIndexRouter(configuration.index),
         new TemplateReader(configuration.index),
         null);
