@@ -16,14 +16,12 @@ import org.apache.commons.io.IOUtils;
 
 public class RestTestUtil {
 
-  private RestTestUtil() {}
-
   public static String getResponseContentAsString(final Response response) {
     try {
       final byte[] result = getResponseContentAsByteArray(response);
       return new String(result);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 

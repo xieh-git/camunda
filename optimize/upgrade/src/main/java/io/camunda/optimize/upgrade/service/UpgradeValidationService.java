@@ -28,13 +28,13 @@ public class UpgradeValidationService {
   public void validateSchemaVersions(
       final String schemaVersion, final String fromVersion, final String toVersion) {
     if (schemaVersion == null) {
-      throw new RuntimeException("Schema Version cannot be null");
+      throw new OptimizeRuntimeException("Schema Version cannot be null");
     }
     if (fromVersion == null) {
-      throw new RuntimeException("From version cannot be null");
+      throw new OptimizeRuntimeException("From version cannot be null");
     }
     if (toVersion == null) {
-      throw new RuntimeException("To version cannot be null");
+      throw new OptimizeRuntimeException("To version cannot be null");
     }
 
     try {

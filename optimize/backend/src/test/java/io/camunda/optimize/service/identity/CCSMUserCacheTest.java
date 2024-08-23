@@ -80,7 +80,7 @@ public class CCSMUserCacheTest {
     try {
       ccsmUsersCacheField.set(underTest, ccsmUsersCache);
     } catch (final IllegalAccessException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 

@@ -59,7 +59,7 @@ public class UpdateDataStep extends UpgradeStep {
       try {
         parameters = paramMapProvider.call();
       } catch (final Exception e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
     }
     schemaUpgradeClient.updateDataByIndexName(index, query, updateScript, parameters);

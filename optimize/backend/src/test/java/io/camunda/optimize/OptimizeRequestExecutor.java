@@ -1752,7 +1752,7 @@ public class OptimizeRequestExecutor {
           ? Entity.entity("", mediaType)
           : Entity.entity(objectMapper.writeValueAsString(entity), mediaType);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException("Couldn't serialize request" + e.getMessage(), e);
+      throw new OptimizeRuntimeException("Couldn't serialize request" + e.getMessage(), e);
     }
   }
 

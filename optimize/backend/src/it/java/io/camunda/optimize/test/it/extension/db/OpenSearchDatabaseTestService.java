@@ -348,7 +348,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
               .indices()
               .get(RequestDSL.getIndexRequestBuilder("*").ignoreUnavailable(true).build());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
 
     final String[] indicesToDelete =
@@ -424,7 +424,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
           .exists(new ExistsRequest.Builder().index(indexName).build())
           .value();
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -463,7 +463,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
       return getOptimizeOpenSearchClient()
           .count(new String[] {expectedIndex}, queryContainer.toOpenSearchQuery());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -485,7 +485,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
           .map(Hit::source)
           .toList();
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -529,7 +529,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
             OpenSearchClientBuilder.getCurrentOSVersion(
                 getOptimizeOpenSearchClient().getOpenSearchClient());
       } catch (final IOException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
     }
     return opensearchDatabaseVersion;
@@ -569,7 +569,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
                   .index(indexName)
                   .build());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -660,7 +660,7 @@ public class OpenSearchDatabaseTestService extends DatabaseTestService {
     try {
       aliasResponse = getOptimizeOpenSearchClient().getAlias(aliasNameWithPrefix);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     final Map<String, IndexAliases> indexNameToAliasMap = aliasResponse.result();
     return indexNameToAliasMap.entrySet().stream()

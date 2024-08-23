@@ -18,23 +18,6 @@ public class LastKpiEvaluationResultsDto implements OptimizeDto {
     this.reportIdToValue = reportIdToValue;
   }
 
-  public Map<String, String> getReportIdToValue() {
-    return reportIdToValue;
-  }
-
-  protected boolean canEqual(final Object other) {
-    return other instanceof LastKpiEvaluationResultsDto;
-  }
-
-  @Override
-  public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final Object $reportIdToValue = getReportIdToValue();
-    result = result * PRIME + ($reportIdToValue == null ? 43 : $reportIdToValue.hashCode());
-    return result;
-  }
-
   @Override
   public boolean equals(final Object o) {
     if (o == this) {
@@ -43,22 +26,6 @@ public class LastKpiEvaluationResultsDto implements OptimizeDto {
     if (!(o instanceof LastKpiEvaluationResultsDto)) {
       return false;
     }
-    final LastKpiEvaluationResultsDto other = (LastKpiEvaluationResultsDto) o;
-    if (!other.canEqual((Object) this)) {
-      return false;
-    }
-    final Object this$reportIdToValue = getReportIdToValue();
-    final Object other$reportIdToValue = other.getReportIdToValue();
-    if (this$reportIdToValue == null
-        ? other$reportIdToValue != null
-        : !this$reportIdToValue.equals(other$reportIdToValue)) {
-      return false;
-    }
     return true;
-  }
-
-  @Override
-  public String toString() {
-    return "LastKpiEvaluationResultsDto(reportIdToValue=" + getReportIdToValue() + ")";
   }
 }

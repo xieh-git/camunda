@@ -41,12 +41,10 @@ public class IngestionQoSFilter implements Filter {
   public static final String RETRY_AFTER_SECONDS = "5";
   private static final String TOO_MANY_REQUESTS = "Too many requests";
   private static final Logger log = org.slf4j.LoggerFactory.getLogger(IngestionQoSFilter.class);
-  private long waitMs = 50;
-  private long suspendMs = 500;
+  private final long waitMs = 50;
+  private final long suspendMs = 500;
   private int maxRequests = 10;
   private Semaphore passes;
-  private final String suspended =
-      "IngestionQoSFilter@" + Integer.toHexString(hashCode()) + ".SUSPENDED";
   private Queue<AsyncContext>[] queues;
   private AsyncListener[] listeners;
   private final Callable<Integer> maxRequestCountProvider;
@@ -54,9 +52,6 @@ public class IngestionQoSFilter implements Filter {
   public IngestionQoSFilter(final Callable<Integer> maxRequestCountProvider) {
     this.maxRequestCountProvider = maxRequestCountProvider;
   }
-
-  private final String resumed =
-      "IngestionQoSFilter@" + Integer.toHexString(hashCode()) + ".RESUMED";
 
   @Override
   public void init(final FilterConfig filterConfig) {
@@ -77,7 +72,7 @@ public class IngestionQoSFilter implements Filter {
       throws IOException, ServletException {
     // This is the only configurable property. It cannot be set during initialization so needs
     // setting here instead
-    if (getMaxRequests() != getMaxRequestsFromProvider()) {
+    if (maxRequests != getMaxRequestsFromProvider()) {
       setMaxRequests(getMaxRequestsFromProvider());
     }
 
@@ -105,7 +100,7 @@ public class IngestionQoSFilter implements Filter {
           try {
             asyncContext = (AsyncContext) FieldUtils.readField(asyncContext, "asyncContext", true);
           } catch (final IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new OptimizeRuntimeException(e);
           }
 
           queues[priority].add(asyncContext);
@@ -167,7 +162,9 @@ public class IngestionQoSFilter implements Filter {
   }
 
   @Override
-  public void destroy() {}
+  public void destroy() {
+  }  private final String suspended =
+      "IngestionQoSFilter@" + Integer.toHexString(hashCode()) + ".SUSPENDED";
 
   private int getPriority(final ServletRequest request) {
     // We use the default prioritization for requests, as per the Jetty QoSFilter
@@ -184,6 +181,12 @@ public class IngestionQoSFilter implements Filter {
     }
   }
 
+  private void setMaxRequests(final int value) {
+    log.info("setting the max number of ingestion requests to {}", value);
+    passes = new Semaphore((value - maxRequests + passes.availablePermits()), true);
+    maxRequests = value;
+  }
+
   protected void sendErrorResponse(final ServletResponse servletResponse) throws IOException {
     // We send a different error response than Jetty QoSFilter plus a required header in line with
     // CloudEvent specification
@@ -196,70 +199,8 @@ public class IngestionQoSFilter implements Filter {
     try {
       return maxRequestCountProvider.call();
     } catch (final Exception e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
-  }
-
-  public String getSuspended() {
-    return suspended;
-  }
-
-  public String getResumed() {
-    return resumed;
-  }
-
-  public long getWaitMs() {
-    return waitMs;
-  }
-
-  public void setWaitMs(final long waitMs) {
-    this.waitMs = waitMs;
-  }
-
-  public long getSuspendMs() {
-    return suspendMs;
-  }
-
-  public void setSuspendMs(final long suspendMs) {
-    this.suspendMs = suspendMs;
-  }
-
-  public int getMaxRequests() {
-    return maxRequests;
-  }
-
-  private void setMaxRequests(final int value) {
-    log.info("setting the max number of ingestion requests to {}", value);
-    passes = new Semaphore((value - maxRequests + passes.availablePermits()), true);
-    maxRequests = value;
-  }
-
-  public Semaphore getPasses() {
-    return passes;
-  }
-
-  public void setPasses(final Semaphore passes) {
-    this.passes = passes;
-  }
-
-  public Queue<AsyncContext>[] getQueues() {
-    return queues;
-  }
-
-  public void setQueues(final Queue<AsyncContext>[] queues) {
-    this.queues = queues;
-  }
-
-  public AsyncListener[] getListeners() {
-    return listeners;
-  }
-
-  public void setListeners(final AsyncListener[] listeners) {
-    this.listeners = listeners;
-  }
-
-  public Callable<Integer> getMaxRequestCountProvider() {
-    return maxRequestCountProvider;
   }
 
   protected boolean canEqual(final Object other) {
@@ -270,20 +211,15 @@ public class IngestionQoSFilter implements Filter {
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
-    final Object $suspended = getSuspended();
-    result = result * PRIME + ($suspended == null ? 43 : $suspended.hashCode());
-    final Object $resumed = getResumed();
-    result = result * PRIME + ($resumed == null ? 43 : $resumed.hashCode());
-    final long $waitMs = getWaitMs();
-    result = result * PRIME + (int) ($waitMs >>> 32 ^ $waitMs);
-    final long $suspendMs = getSuspendMs();
-    result = result * PRIME + (int) ($suspendMs >>> 32 ^ $suspendMs);
-    result = result * PRIME + getMaxRequests();
-    final Object $passes = getPasses();
-    result = result * PRIME + ($passes == null ? 43 : $passes.hashCode());
-    result = result * PRIME + java.util.Arrays.deepHashCode(getQueues());
-    result = result * PRIME + java.util.Arrays.deepHashCode(getListeners());
-    final Object $maxRequestCountProvider = getMaxRequestCountProvider();
+    result = result * PRIME + (suspended == null ? 43 : suspended.hashCode());
+    result = result * PRIME + (resumed == null ? 43 : resumed.hashCode());
+    result = result * PRIME + (int) (waitMs >>> 32 ^ waitMs);
+    result = result * PRIME + (int) (suspendMs >>> 32 ^ suspendMs);
+    result = result * PRIME + maxRequests;
+    result = result * PRIME + (passes == null ? 43 : passes.hashCode());
+    result = result * PRIME + java.util.Arrays.deepHashCode(queues);
+    result = result * PRIME + java.util.Arrays.deepHashCode(listeners);
+    final Object $maxRequestCountProvider = maxRequestCountProvider;
     result =
         result * PRIME
             + ($maxRequestCountProvider == null ? 43 : $maxRequestCountProvider.hashCode());
@@ -302,43 +238,35 @@ public class IngestionQoSFilter implements Filter {
     if (!other.canEqual((Object) this)) {
       return false;
     }
-    final Object this$suspended = getSuspended();
-    final Object other$suspended = other.getSuspended();
-    if (this$suspended == null
-        ? other$suspended != null
-        : !this$suspended.equals(other$suspended)) {
+    if (suspended == null
+        ? other.suspended != null
+        : !suspended.equals(other.suspended)) {
       return false;
     }
-    final Object this$resumed = getResumed();
-    final Object other$resumed = other.getResumed();
-    if (this$resumed == null ? other$resumed != null : !this$resumed.equals(other$resumed)) {
+    if (resumed == null ? other.resumed != null : !resumed.equals(other.resumed)) {
       return false;
     }
-    if (getWaitMs() != other.getWaitMs()) {
+    if (waitMs != other.waitMs) {
       return false;
     }
-    if (getSuspendMs() != other.getSuspendMs()) {
+    if (suspendMs != other.suspendMs) {
       return false;
     }
-    if (getMaxRequests() != other.getMaxRequests()) {
+    if (maxRequests != other.maxRequests) {
       return false;
     }
-    final Object this$passes = getPasses();
-    final Object other$passes = other.getPasses();
-    if (this$passes == null ? other$passes != null : !this$passes.equals(other$passes)) {
+    if (passes == null ? other.passes != null : !passes.equals(other.passes)) {
       return false;
     }
-    if (!java.util.Arrays.deepEquals(getQueues(), other.getQueues())) {
+    if (!java.util.Arrays.deepEquals(queues, other.queues)) {
       return false;
     }
-    if (!java.util.Arrays.deepEquals(getListeners(), other.getListeners())) {
+    if (!java.util.Arrays.deepEquals(listeners, other.listeners)) {
       return false;
     }
-    final Object this$maxRequestCountProvider = getMaxRequestCountProvider();
-    final Object other$maxRequestCountProvider = other.getMaxRequestCountProvider();
-    if (this$maxRequestCountProvider == null
-        ? other$maxRequestCountProvider != null
-        : !this$maxRequestCountProvider.equals(other$maxRequestCountProvider)) {
+    if (maxRequestCountProvider == null
+        ? other.maxRequestCountProvider != null
+        : !maxRequestCountProvider.equals(other.maxRequestCountProvider)) {
       return false;
     }
     return true;
@@ -346,24 +274,15 @@ public class IngestionQoSFilter implements Filter {
 
   @Override
   public String toString() {
-    return "IngestionQoSFilter(suspended="
-        + getSuspended()
-        + ", resumed="
-        + getResumed()
-        + ", waitMs="
-        + getWaitMs()
-        + ", suspendMs="
-        + getSuspendMs()
-        + ", maxRequests="
-        + getMaxRequests()
-        + ", passes="
-        + getPasses()
-        + ", queues="
-        + java.util.Arrays.deepToString(getQueues())
-        + ", listeners="
-        + java.util.Arrays.deepToString(getListeners())
-        + ", maxRequestCountProvider="
-        + getMaxRequestCountProvider()
+    return "IngestionQoSFilter(suspended=" + suspended
+        + ", resumed=" + resumed
+        + ", waitMs=" + waitMs
+        + ", suspendMs=" + suspendMs
+        + ", maxRequests=" + maxRequests
+        + ", passes=" + passes
+        + ", queues=" + java.util.Arrays.deepToString(queues)
+        + ", listeners=" + java.util.Arrays.deepToString(listeners)
+        + ", maxRequestCountProvider=" + maxRequestCountProvider
         + ")";
   }
 
@@ -376,7 +295,8 @@ public class IngestionQoSFilter implements Filter {
     }
 
     @Override
-    public void onComplete(final AsyncEvent event) throws IOException {}
+    public void onComplete(final AsyncEvent event) throws IOException {
+    }
 
     @Override
     public void onTimeout(final AsyncEvent event) throws IOException {
@@ -389,9 +309,18 @@ public class IngestionQoSFilter implements Filter {
     }
 
     @Override
-    public void onError(final AsyncEvent event) throws IOException {}
+    public void onError(final AsyncEvent event) throws IOException {
+    }
 
     @Override
-    public void onStartAsync(final AsyncEvent event) throws IOException {}
+    public void onStartAsync(final AsyncEvent event) throws IOException {
+    }
   }
+
+
+
+  private final String resumed =
+      "IngestionQoSFilter@" + Integer.toHexString(hashCode()) + ".RESUMED";
+
+
 }

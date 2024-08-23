@@ -27,7 +27,7 @@ public class GroupDto extends IdentityWithMetadataResponseDto {
   public GroupDto(final String id, final String name, final Long memberCount) {
     super(id, IdentityType.GROUP, Optional.ofNullable(name).orElse(id));
     if (id == null) {
-      throw new RuntimeException("id is null");
+      throw new OptimizeRuntimeException("id is null");
     }
 
     this.memberCount = memberCount;

@@ -82,7 +82,7 @@ public class MixpanelClientTest {
     try {
       when(httpClient.execute(any())).thenReturn(mockResponse);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
 
     final String stage = "unit-test";
@@ -98,7 +98,7 @@ public class MixpanelClientTest {
     try {
       verify(httpClient, times(1)).execute(requestCaptor.capture());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
 
     // then
@@ -138,7 +138,7 @@ public class MixpanelClientTest {
     try {
       when(httpClient.execute(any())).thenReturn(mockResponse);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
 
     // when
@@ -164,7 +164,7 @@ public class MixpanelClientTest {
     try {
       when(httpClient.execute(any())).thenReturn(mockResponse);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
 
     // when
@@ -190,7 +190,7 @@ public class MixpanelClientTest {
     try {
       when(httpClient.execute(any())).thenReturn(mockResponse);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
 
     // when
@@ -224,7 +224,7 @@ public class MixpanelClientTest {
         return objectMapper.readValue(CharStreams.toString(reader), MixpanelEvent[].class)[0];
       }
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 }

@@ -74,7 +74,7 @@ public class WebhookNotificationService
   @Override
   public void notify(final AlertNotificationDto notification) {
     if (notification == null) {
-      throw new RuntimeException("Notification cannot be null");
+      throw new OptimizeRuntimeException("Notification cannot be null");
     }
 
     final AlertDefinitionDto alert = notification.getAlert();

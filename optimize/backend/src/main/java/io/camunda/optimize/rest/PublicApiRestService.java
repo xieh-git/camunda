@@ -142,7 +142,7 @@ public class PublicApiRestService {
             // In case the exception happened for another reason, just re-throw it as is
             .orElse(e);
       } catch (final Exception ex) {
-        throw new RuntimeException(ex);
+        throw new OptimizeRuntimeException(ex);
       }
     }
   }

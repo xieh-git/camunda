@@ -52,7 +52,7 @@ public class OptimizeElasticsearchClientConfiguration {
           elasticSearchSchemaManager,
           backoffCalculator);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 }

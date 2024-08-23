@@ -58,10 +58,10 @@ public class DashboardWriterOS implements DashboardWriter {
   public IdResponseDto createNewDashboard(
       final String userId, final DashboardDefinitionRestDto dashboardDefinitionDto) {
     if (userId == null) {
-      throw new RuntimeException("userId cannot be null");
+      throw new OptimizeRuntimeException("userId cannot be null");
     }
     if (dashboardDefinitionDto == null) {
-      throw new RuntimeException("dashboardDefinitionDto cannot be null");
+      throw new OptimizeRuntimeException("dashboardDefinitionDto cannot be null");
     }
     return createNewDashboard(userId, dashboardDefinitionDto, IdGenerator.getNextId());
   }
@@ -72,13 +72,13 @@ public class DashboardWriterOS implements DashboardWriter {
       final DashboardDefinitionRestDto dashboardDefinitionDto,
       final String id) {
     if (userId == null) {
-      throw new RuntimeException("userId cannot be null");
+      throw new OptimizeRuntimeException("userId cannot be null");
     }
     if (dashboardDefinitionDto == null) {
-      throw new RuntimeException("dashboardDefinitionDto cannot be null");
+      throw new OptimizeRuntimeException("dashboardDefinitionDto cannot be null");
     }
     if (id == null) {
-      throw new RuntimeException("id cannot be null");
+      throw new OptimizeRuntimeException("id cannot be null");
     }
 
     log.debug("Writing new dashboard to OpenSearch");
@@ -93,7 +93,7 @@ public class DashboardWriterOS implements DashboardWriter {
   @Override
   public IdResponseDto saveDashboard(final DashboardDefinitionRestDto dashboardDefinitionDto) {
     if (dashboardDefinitionDto == null) {
-      throw new RuntimeException("dashboardDefinitionDto cannot be null");
+      throw new OptimizeRuntimeException("dashboardDefinitionDto cannot be null");
     }
 
     dashboardDefinitionDto.setCreated(LocalDateUtil.getCurrentDateTime());

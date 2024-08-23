@@ -536,7 +536,7 @@ public class DefinitionService implements ConfigurationReloadable {
   private HashSet<String> resolveTenantsToFilterFor(
       final List<String> tenantIds, final String userId) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
 
     return Sets.newHashSet(

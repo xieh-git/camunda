@@ -354,7 +354,7 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
     try {
       zeebeExtension.setClock(Instant.now().plus(1, ChronoUnit.DAYS));
     } catch (final IOException | InterruptedException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     zeebeExtension.completeTaskForInstanceWithJobType(SERVICE_TASK);
     waitUntilMinimumProcessInstanceEventsExportedCount(8);

@@ -94,7 +94,7 @@ public class VariablesClient {
       return createJsonObjectVariableDto(
           objectMapper.writeValueAsString(variable), "java.util.HashMap");
     } catch (final JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -103,7 +103,7 @@ public class VariablesClient {
       return createJsonObjectVariableDto(
           objectMapper.writeValueAsString(variable), "java.util.ArrayList");
     } catch (final JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -122,7 +122,7 @@ public class VariablesClient {
     try {
       return createNativeJsonVariableDto(objectMapper.writeValueAsString(variable));
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -130,7 +130,7 @@ public class VariablesClient {
     try {
       return createNativeJsonVariableDto(objectMapper.writeValueAsString(variable));
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 

@@ -65,7 +65,7 @@ public class ZeebeRecordFetcherTest {
     try {
       when(optimizeElasticsearchClient.searchWithoutPrefixing(any())).thenThrow(IOException.class);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
 
     // when the next import is attempted
@@ -103,7 +103,7 @@ public class ZeebeRecordFetcherTest {
       try {
         when(optimizeElasticsearchClient.searchWithoutPrefixing(any())).thenReturn(searchResponse);
       } catch (final IOException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
 
       // when the next import is attempted
@@ -208,7 +208,7 @@ public class ZeebeRecordFetcherTest {
       try {
         when(optimizeElasticsearchClient.searchWithoutPrefixing(any())).thenReturn(searchResponse);
       } catch (final IOException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
 
       // when the next import is attempted

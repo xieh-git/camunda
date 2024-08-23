@@ -81,7 +81,7 @@ public class MaxRequestSizeFilter implements Filter {
     try {
       return maxSizeProvider.call();
     } catch (final Exception e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -95,7 +95,7 @@ public class MaxRequestSizeFilter implements Filter {
           .write(
               objectMapperProvider.call().writeValueAsString(new ErrorResponseDto(errorMessage)));
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     httpResponse.setStatus(statusCode);
   }

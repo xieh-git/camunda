@@ -437,7 +437,7 @@ public class ZeebeVariableCreationImportIT extends AbstractCCSMIT {
     try {
       zeebeExtension.setClock(Instant.now().plus(1, ChronoUnit.DAYS));
     } catch (final IOException | InterruptedException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     zeebeExtension.addVariablesToScope(startedInstanceKey, Map.of("var2", "someValue2"), false);
 

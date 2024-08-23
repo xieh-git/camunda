@@ -55,7 +55,7 @@
 //               engineName,
 //               statusCode,
 //               responseString);
-//           throw new RuntimeException(
+//           throw new OptimizeRuntimeException(
 //               "Something really bad happened during engine deployment, please check the logs.");
 //       }
 //     } catch (IOException e) {
@@ -75,7 +75,7 @@
 //                 .build());
 //     try (CloseableHttpResponse response = httpClient.execute(purgeRequest)) {
 //       if (response.getStatusLine().getStatusCode() != Response.Status.OK.getStatusCode()) {
-//         throw new RuntimeException(
+//         throw new OptimizeRuntimeException(
 //             "Something really bad happened during purge, please check the logs.");
 //       }
 //       log.info("Finished cleaning engine");

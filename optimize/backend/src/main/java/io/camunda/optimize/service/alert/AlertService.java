@@ -153,7 +153,7 @@ public class AlertService implements ReportReferencingService {
       } catch (final Exception destroyException) {
         log.error("Failed destroying alertService", destroyException);
       }
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 

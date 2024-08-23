@@ -80,13 +80,13 @@ public class ReportWriterOS implements ReportWriter {
       final String description,
       final String collectionId) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (reportData == null) {
-      throw new RuntimeException("reportData is null");
+      throw new OptimizeRuntimeException("reportData is null");
     }
     if (reportName == null) {
-      throw new RuntimeException("reportName is null");
+      throw new OptimizeRuntimeException("reportName is null");
     }
 
     log.debug("Writing new combined report to OpenSearch");
@@ -134,10 +134,10 @@ public class ReportWriterOS implements ReportWriter {
       final String description,
       final String collectionId) {
     if (reportData == null) {
-      throw new RuntimeException("reportData is null");
+      throw new OptimizeRuntimeException("reportData is null");
     }
     if (reportName == null) {
-      throw new RuntimeException("reportName is null");
+      throw new OptimizeRuntimeException("reportName is null");
     }
 
     log.debug("Writing new single report to OpenSearch");
@@ -187,13 +187,13 @@ public class ReportWriterOS implements ReportWriter {
       final String description,
       final String collectionId) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (reportData == null) {
-      throw new RuntimeException("reportData is null");
+      throw new OptimizeRuntimeException("reportData is null");
     }
     if (reportName == null) {
-      throw new RuntimeException("reportName is null");
+      throw new OptimizeRuntimeException("reportName is null");
     }
 
     log.debug("Writing new single report to OpenSearch");

@@ -134,7 +134,7 @@ public class OpenSearchIndexOperations extends OpenSearchRetryOperation {
               openSearchClient.indices().refresh(r -> r.index(List.of(index)));
             }
           } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new OptimizeRuntimeException(e);
           }
           return true;
         });

@@ -103,9 +103,9 @@ public class EnvironmentVariablesExtension implements BeforeEachCallback, AfterE
     try {
       return getFieldValue(classOfMap, getenv(), "m");
     } catch (final IllegalAccessException e) {
-      throw new RuntimeException("Cannot access the field 'm' of the map System.getenv().", e);
+      throw new OptimizeRuntimeException("Cannot access the field 'm' of the map System.getenv().", e);
     } catch (final NoSuchFieldException e) {
-      throw new RuntimeException(
+      throw new OptimizeRuntimeException(
           "Expecting System.getenv() to have a field 'm' but it has not.", e);
     }
   }
@@ -122,12 +122,12 @@ public class EnvironmentVariablesExtension implements BeforeEachCallback, AfterE
       final Class<?> processEnvironment = forName(processEnv);
       return getFieldValue(processEnvironment, null, caseInsensitiveEnv);
     } catch (final ClassNotFoundException e) {
-      throw new RuntimeException(
+      throw new OptimizeRuntimeException(
           String.format(
               "Expecting the existence of the class %s but it does not exist.", processEnv),
           e);
     } catch (final IllegalAccessException e) {
-      throw new RuntimeException(
+      throw new OptimizeRuntimeException(
           String.format(
               "Cannot access the static field %s of the class %s.", caseInsensitiveEnv, processEnv),
           e);

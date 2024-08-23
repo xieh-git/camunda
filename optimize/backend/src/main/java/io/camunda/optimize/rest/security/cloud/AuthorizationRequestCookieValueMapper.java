@@ -36,7 +36,7 @@ public class AuthorizationRequestCookieValueMapper {
       return Base64.getUrlEncoder()
           .encodeToString(objectMapper.writeValueAsString(authorizationRequest).getBytes(UTF_8));
     } catch (final JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -45,7 +45,7 @@ public class AuthorizationRequestCookieValueMapper {
       return objectMapper.readValue(
           Base64.getUrlDecoder().decode(value), OAuth2AuthorizationRequest.class);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 

@@ -290,7 +290,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
               .filter(index -> index.contains(indexTerm))
               .toArray(String[]::new);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     if (indicesToDelete.length > 0) {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
@@ -357,7 +357,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
                       indexName.startsWith(getIndexNameService().getIndexPrefix() + "-" + term))
               .toArray(String[]::new);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     if (indicesToDelete.length > 0) {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
@@ -380,7 +380,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
               .filter(indexName -> indexName.contains(zeebeRecordPrefix))
               .toArray(String[]::new);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     if (indicesToDelete.length > 1) {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
@@ -406,7 +406,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
                       indexName.contains(zeebeRecordPrefix) && !indexName.contains(recordsToKeep))
               .toArray(String[]::new);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     if (indicesToDelete.length > 1) {
       getOptimizeElasticClient().deleteIndexByRawIndexNames(indicesToDelete);
@@ -432,7 +432,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
           .getHighLevelClient()
           .updateByQuery(update, getOptimizeElasticClient().requestOptions());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -458,7 +458,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
           .getHighLevelClient()
           .updateByQuery(update, getOptimizeElasticClient().requestOptions());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -490,7 +490,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
           .getHighLevelClient()
           .updateByQuery(update, getOptimizeElasticClient().requestOptions());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -513,7 +513,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       getOptimizeElasticClient().update(update);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -539,7 +539,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
           .indices()
           .exists(new GetIndexRequest(indexName), esClient.requestOptions());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -553,7 +553,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       response = prefixAwareRestHighLevelClient.get(getRequest);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     if (response.isExists()) {
       try {
@@ -561,7 +561,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
             .readValue(response.getSourceAsString(), TimestampBasedImportIndexDto.class)
             .getTimestampOfLastEntity();
       } catch (final JsonProcessingException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
     } else {
       throw new NotFoundException(
@@ -598,7 +598,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       searchResponse = esClient.searchWithoutPrefixing(searchRequest);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     return ElasticsearchReaderUtil.mapHits(
         searchResponse.getHits(), zeebeRecordClass, OPTIMIZE_MAPPER);
@@ -610,7 +610,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       getOptimizeElasticClient().delete(request);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -639,13 +639,13 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       searchResponse = getOptimizeElasticClient().search(searchRequest);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     for (final SearchHit hit : searchResponse.getHits().getHits()) {
       try {
         results.add(getObjectMapper().readValue(hit.getSourceAsString(), type));
       } catch (final JsonProcessingException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
     }
     return results;
@@ -659,13 +659,13 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       getResponse = getOptimizeElasticClient().get(getRequest);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     if (getResponse.isExists()) {
       try {
         return Optional.of(getObjectMapper().readValue(getResponse.getSourceAsString(), type));
       } catch (final JsonProcessingException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
     } else {
       return Optional.empty();
@@ -681,7 +681,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
                 getOptimizeElasticClient().getHighLevelClient(),
                 getOptimizeElasticClient().requestOptions());
       } catch (final IOException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
     }
     return elasticsearchDatabaseVersion;
@@ -721,7 +721,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
               new UpdateSettingsRequest(buildDynamicSettings(configurationService), indexName),
               esClient.requestOptions());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -812,7 +812,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       response = getOptimizeElasticClient().search(searchRequest);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
 
     final Nested nested = response.getAggregations().get(FLOW_NODE_INSTANCES);
@@ -828,7 +828,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       indexNameToAliasMap = getOptimizeElasticClient().getAlias(aliasesRequest).getAliases();
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
     return indexNameToAliasMap.keySet().stream()
         .filter(
@@ -934,7 +934,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       return OBJECT_MAPPER.writeValueAsString(idAndObject.getValue());
     } catch (final JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -942,7 +942,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
     try {
       getOptimizeElasticClient().bulk(bulkRequest);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -981,7 +981,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       try {
         response = getOptimizeElasticClient().searchWithoutPrefixing(searchRequest);
       } catch (final IOException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
       results.addAll(mapHits(response.getHits(), type, getObjectMapper()));
     }
@@ -993,7 +993,7 @@ public class ElasticsearchDatabaseTestService extends DatabaseTestService {
       try {
         response = getOptimizeElasticClient().search(searchRequest);
       } catch (final IOException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
       results.addAll(mapHits(response.getHits(), type, getObjectMapper()));
     }

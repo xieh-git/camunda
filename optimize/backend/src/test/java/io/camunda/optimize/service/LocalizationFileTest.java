@@ -62,7 +62,7 @@ public class LocalizationFileTest {
               .getResourceAsStream(LocalizationService.LOCALIZATION_PATH + locale + ".json"),
           Map.class);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 }

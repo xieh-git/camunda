@@ -85,13 +85,13 @@ public class ReportWriterES implements ReportWriter {
       final String description,
       final String collectionId) {
     if (userId == null) {
-      throw new RuntimeException("userId cannot be null");
+      throw new OptimizeRuntimeException("userId cannot be null");
     }
     if (reportData == null) {
-      throw new RuntimeException("reportData cannot be null");
+      throw new OptimizeRuntimeException("reportData cannot be null");
     }
     if (reportName == null) {
-      throw new RuntimeException("reportName cannot be null");
+      throw new OptimizeRuntimeException("reportName cannot be null");
     }
 
     log.debug("Writing new combined report to Elasticsearch");
@@ -141,10 +141,10 @@ public class ReportWriterES implements ReportWriter {
       final String description,
       final String collectionId) {
     if (reportData == null) {
-      throw new RuntimeException("reportData cannot be null");
+      throw new OptimizeRuntimeException("reportData cannot be null");
     }
     if (reportName == null) {
-      throw new RuntimeException("reportName cannot be null");
+      throw new OptimizeRuntimeException("reportName cannot be null");
     }
 
     log.debug("Writing new single report to Elasticsearch");
@@ -195,13 +195,13 @@ public class ReportWriterES implements ReportWriter {
       final String description,
       final String collectionId) {
     if (userId == null) {
-      throw new RuntimeException("userId cannot be null");
+      throw new OptimizeRuntimeException("userId cannot be null");
     }
     if (reportData == null) {
-      throw new RuntimeException("reportData cannot be null");
+      throw new OptimizeRuntimeException("reportData cannot be null");
     }
     if (reportName == null) {
-      throw new RuntimeException("reportName cannot be null");
+      throw new OptimizeRuntimeException("reportName cannot be null");
     }
 
     log.debug("Writing new single report to Elasticsearch");

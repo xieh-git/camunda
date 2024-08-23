@@ -255,13 +255,13 @@ public class ReportService implements CollectionReferencingService {
       final Map<String, String> existingReportCopies,
       final boolean keepSubReportNames) {
     if (reportId == null) {
-      throw new RuntimeException("reportId is null");
+      throw new OptimizeRuntimeException("reportId is null");
     }
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (existingReportCopies == null) {
-      throw new RuntimeException("existingReportCopies is null");
+      throw new OptimizeRuntimeException("existingReportCopies is null");
     }
 
     final AuthorizedReportDefinitionResponseDto authorizedReportDefinition =

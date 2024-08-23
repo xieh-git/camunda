@@ -759,7 +759,7 @@ public class OptimizeElasticsearchClient extends DatabaseClient {
     try {
       highLevelClient.info(RequestOptions.DEFAULT);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 

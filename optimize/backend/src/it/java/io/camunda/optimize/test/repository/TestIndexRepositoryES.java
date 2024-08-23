@@ -36,7 +36,7 @@ public class TestIndexRepositoryES implements TestIndexRepository {
               .get(request, esClient.requestOptions())
               .getIndices());
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 }

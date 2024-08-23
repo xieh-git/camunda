@@ -96,7 +96,7 @@ public class JavaScriptMainLicenseEnricherFilter implements Filter {
     try {
       return CharStreams.toString(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 }

@@ -52,7 +52,7 @@ public class OptimizeOpenSearchClientConfiguration {
           openSearchSchemaManager,
           backoffCalculator);
     } catch (final IOException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 }

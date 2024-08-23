@@ -21,7 +21,7 @@ public class FileReaderUtil {
       return IOUtils.toString(
           FileReaderUtil.class.getResource(pathString).toURI(), StandardCharsets.UTF_8);
     } catch (final IOException | URISyntaxException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 

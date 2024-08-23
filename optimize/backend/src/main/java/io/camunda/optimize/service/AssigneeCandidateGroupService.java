@@ -80,10 +80,10 @@ public class AssigneeCandidateGroupService {
   public IdentitySearchResultResponseDto searchForAssigneesAsUser(
       final String userId, final AssigneeCandidateGroupDefinitionSearchRequestDto requestDto) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (requestDto == null) {
-      throw new RuntimeException("requestDto is null");
+      throw new OptimizeRuntimeException("requestDto is null");
     }
 
     return searchForAssignees(
@@ -96,10 +96,10 @@ public class AssigneeCandidateGroupService {
   public IdentitySearchResultResponseDto searchForAssigneesAsUser(
       final String userId, final AssigneeCandidateGroupReportSearchRequestDto requestDto) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (requestDto == null) {
-      throw new RuntimeException("requestDto is null");
+      throw new OptimizeRuntimeException("requestDto is null");
     }
 
     return searchForAssignees(
@@ -120,10 +120,10 @@ public class AssigneeCandidateGroupService {
   public IdentitySearchResultResponseDto searchForCandidateGroupsAsUser(
       final String userId, final AssigneeCandidateGroupDefinitionSearchRequestDto requestDto) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (requestDto == null) {
-      throw new RuntimeException("requestDto is null");
+      throw new OptimizeRuntimeException("requestDto is null");
     }
 
     return searchForCandidateGroups(
@@ -136,10 +136,10 @@ public class AssigneeCandidateGroupService {
   public IdentitySearchResultResponseDto searchForCandidateGroupsAsUser(
       final String userId, final AssigneeCandidateGroupReportSearchRequestDto requestDto) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (requestDto == null) {
-      throw new RuntimeException("requestDto is null");
+      throw new OptimizeRuntimeException("requestDto is null");
     }
 
     return searchForCandidateGroups(
@@ -153,10 +153,10 @@ public class AssigneeCandidateGroupService {
       final String terms,
       final Map<String, Set<String>> definitionKeyToTenantsMap) {
     if (terms == null) {
-      throw new RuntimeException("terms is null");
+      throw new OptimizeRuntimeException("terms is null");
     }
     if (definitionKeyToTenantsMap == null) {
-      throw new RuntimeException("definitionKeyToTenantsMap is null");
+      throw new OptimizeRuntimeException("definitionKeyToTenantsMap is null");
     }
 
     // this is not efficient but a compromise assuming assignee cardinality is usually within a
@@ -174,10 +174,10 @@ public class AssigneeCandidateGroupService {
       final String terms,
       final Map<String, Set<String>> definitionKeyToTenantsMap) {
     if (terms == null) {
-      throw new RuntimeException("terms is null");
+      throw new OptimizeRuntimeException("terms is null");
     }
     if (definitionKeyToTenantsMap == null) {
-      throw new RuntimeException("definitionKeyToTenantsMap is null");
+      throw new OptimizeRuntimeException("definitionKeyToTenantsMap is null");
     }
 
     // this is not efficient but a compromise assuming assignee cardinality is usually within a
@@ -193,10 +193,10 @@ public class AssigneeCandidateGroupService {
   private Map<String, Set<String>> retrieveAuthorizedDefinitionTenantMap(
       final String userId, final List<String> reportIds) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (reportIds == null) {
-      throw new RuntimeException("reportIds is null");
+      throw new OptimizeRuntimeException("reportIds is null");
     }
 
     final List<ReportDefinitionDto> reports =
@@ -231,13 +231,13 @@ public class AssigneeCandidateGroupService {
   private Map<String, Set<String>> validateAccessAndCreateDefinitionTenantMap(
       final String userId, final String definitionKey, final List<String> tenantIds) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
     if (definitionKey == null) {
-      throw new RuntimeException("definitionKey is null");
+      throw new OptimizeRuntimeException("definitionKey is null");
     }
     if (tenantIds == null) {
-      throw new RuntimeException("tenantIds is null");
+      throw new OptimizeRuntimeException("tenantIds is null");
     }
 
     validateDefinitionAccess(userId, definitionKey, tenantIds);
@@ -249,7 +249,7 @@ public class AssigneeCandidateGroupService {
   private void validateDefinitionAccess(
       final String userId, final String processDefinitionKey, final List<String> tenantIds) {
     if (userId == null) {
-      throw new RuntimeException("userId is null");
+      throw new OptimizeRuntimeException("userId is null");
     }
 
     if (!definitionAuthorizationService.isAuthorizedToAccessDefinition(

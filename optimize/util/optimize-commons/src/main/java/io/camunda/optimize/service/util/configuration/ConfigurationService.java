@@ -212,7 +212,7 @@ public class ConfigurationService {
 
   public static DatabaseType convertToDatabaseProperty(final String configuredProperty) {
     if (configuredProperty == null) {
-      throw new RuntimeException("Configured Property cannot be null");
+      throw new OptimizeRuntimeException("Configured Property cannot be null");
     }
     if (configuredProperty.equalsIgnoreCase(ELASTICSEARCH_DATABASE_PROPERTY)) {
       return DatabaseType.ELASTICSEARCH;

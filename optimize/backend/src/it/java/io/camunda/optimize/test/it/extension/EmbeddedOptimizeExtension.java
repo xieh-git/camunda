@@ -106,7 +106,7 @@ public class EmbeddedOptimizeExtension
         serializedDefaultConfiguration =
             configObjectMapper.writeValueAsString(getConfigurationService());
       } catch (final JsonProcessingException e) {
-        throw new RuntimeException(e);
+        throw new OptimizeRuntimeException(e);
       }
     }
     if (beforeAllMode) {
@@ -230,7 +230,7 @@ public class EmbeddedOptimizeExtension
     try {
       scheduler.runImportRound(true).get();
     } catch (final InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -240,7 +240,7 @@ public class EmbeddedOptimizeExtension
     try {
       scheduler.runImportRound(true).get();
     } catch (final InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -261,7 +261,7 @@ public class EmbeddedOptimizeExtension
           .runImportRound(true)
           .get();
     } catch (final InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -491,7 +491,7 @@ public class EmbeddedOptimizeExtension
     try {
       return getObjectMapper().writeValueAsString(object);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
