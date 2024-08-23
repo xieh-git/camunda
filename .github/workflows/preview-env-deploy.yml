@@ -56,7 +56,6 @@ jobs:
       run: |
         echo "argocd_arguments=--dest-namespace ${app_name} \
           --file .ci/preview-environments/argo/c8sm.yml \
-          --helm-set camunda-platform.camunda.image.tag=${docker_tag} \
           --helm-set camunda-platform.elasticsearch.image.tag=${elasticsearch_image_tag} \
           --helm-set git.branch=${revision} \
           --helm-set global.labels.app=${app_name} \
@@ -69,7 +68,6 @@ jobs:
           --revision ${revision} \
           --upsert" >> $GITHUB_ENV
       env:
-        docker_tag: "pr-1882c176b432bd532dac75c460ef95cbfc281cab" # commit id of latest PR event
         revision: ${{ env.BRANCH_NAME }}
         app_name: camunda-${{ steps.sanitize.outputs.branch_name }}
         elasticsearch_image_tag: "8.13.4"
