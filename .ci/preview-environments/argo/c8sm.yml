@@ -18,8 +18,6 @@ spec:
   source:
     helm:
       parameters: [ ]
-      valueFiles:
-      - values.yaml
     path: .ci/preview-environments/charts/c8sm
     repoURL: https://github.com/camunda/camunda.git
     targetRevision: preview-env-build-helmchart
