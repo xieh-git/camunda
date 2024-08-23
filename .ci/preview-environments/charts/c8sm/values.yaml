@@ -69,7 +69,7 @@ camunda-platform:
         - name: dockerhub-registry
         - name: registry-camunda-cloud
       # will be set by the "deploy-preview-env" action
-      tag: "pr-dce606a0185e3306afa357ba9fbd33a83b001b04"
+      tag: "pr-1882c176b432bd532dac75c460ef95cbfc281cab"
     env:
     - name: SPRING_PROFILES_ACTIVE
       value: dev-data
@@ -89,7 +89,7 @@ camunda-platform:
       - name: dockerhub-registry
       - name: registry-camunda-cloud
       # will be set by the "deploy-preview-env" action
-      tag: "pr-dce606a0185e3306afa357ba9fbd33a83b001b04"
+      tag: "pr-1882c176b432bd532dac75c460ef95cbfc281cab"
     env:
     - name: CAMUNDA_OPTIMIZE_IMPORT_CUSTOMER_ONBOARDING
       value: "true"
@@ -109,7 +109,7 @@ camunda-platform:
         - name: dockerhub-registry
         - name: registry-camunda-cloud
       # will be set by the "deploy-preview-env" action
-      tag: "pr-dce606a0185e3306afa357ba9fbd33a83b001b04"
+      tag: "pr-1882c176b432bd532dac75c460ef95cbfc281cab"
     nodeSelector:
       cloud.google.com/gke-nodepool: previews
     tolerations:
