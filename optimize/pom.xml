@@ -383,6 +383,9 @@
       <version>4.2.2</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- apparently, non-test dependencies
+
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-codec-http</artifactId>
@@ -403,6 +406,8 @@
       <artifactId>netty-handler-proxy</artifactId>
       <version>${netty.version}</version>
     </dependency>
+
+    -->
   </dependencies>
 
   <build>
@@ -412,6 +417,15 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
           <version>3.8.0</version>
+
+          <!--
+            this configuration node is needed to suppress the warnings/errors given by
+            dependency:analyze for dependencies that are scoped as test.
+          -->
+          <configuration>
+            <ignoredUnusedDeclaredDependencies combine.children="append">
+            </ignoredUnusedDeclaredDependencies>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
