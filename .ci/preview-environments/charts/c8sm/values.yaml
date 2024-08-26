@@ -4,6 +4,21 @@ git:
   # Defines the repository URL to use for annotating resources
   repoUrl: https://github.com/camunda/camunda
 
+optimize:
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    path: /
+    pathType: Prefix
+    host: "your-hostname.com"
+    tls:
+      enabled: true
+      #secretName: camunda-platform-optimize
+
 global:
   labels:
     camunda.cloud/source: argocd
