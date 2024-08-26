@@ -17,7 +17,7 @@ optimize:
     host: "your-hostname.com"
     tls:
       enabled: true
-      #secretName: camunda-platform-optimize
+      secretName: camunda-tls
 
 global:
   labels:
