@@ -115,7 +115,7 @@ public class DefinitionService implements ConfigurationReloadable {
             definitionWithTenantIdsDto -> {
               final Optional<DefinitionResponseDto> authorizedDefinition =
                   filterAndMapDefinitionsWithTenantIdsByAuthorizations(
-                      userId, Collections.singleton(definitionWithTenantIdsDto))
+                          userId, Collections.singleton(definitionWithTenantIdsDto))
                       .findFirst();
               return authorizedDefinition.orElseThrow(
                   () ->

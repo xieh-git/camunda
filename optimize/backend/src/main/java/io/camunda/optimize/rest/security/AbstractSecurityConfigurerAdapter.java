@@ -31,9 +31,11 @@ public abstract class AbstractSecurityConfigurerAdapter {
   protected final SessionService sessionService;
   protected final AuthCookieService authCookieService;
 
-  public AbstractSecurityConfigurerAdapter(final ConfigurationService configurationService,
+  public AbstractSecurityConfigurerAdapter(
+      final ConfigurationService configurationService,
       final CustomPreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider,
-      final SessionService sessionService, final AuthCookieService authCookieService) {
+      final SessionService sessionService,
+      final AuthCookieService authCookieService) {
     this.configurationService = configurationService;
     this.preAuthenticatedAuthenticationProvider = preAuthenticatedAuthenticationProvider;
     this.sessionService = sessionService;
@@ -66,7 +68,8 @@ public abstract class AbstractSecurityConfigurerAdapter {
           // clickjacking
           // is prevented by the same-site flag being set to `strict` on the authentication cookie
           .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-          // spring session management is not needed as we have stateless session handling using a JWT
+          // spring session management is not needed as we have stateless session handling using a
+          // JWT
           // token stored as cookie
           .sessionManagement(
               sessionMgmt -> sessionMgmt.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -25,11 +25,10 @@ import org.springframework.context.annotation.Conditional;
 @Conditional(OpenSearchCondition.class)
 public class OptimizeOpenSearchClientFactory {
 
-  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
-      OptimizeOpenSearchClientFactory.class);
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(OptimizeOpenSearchClientFactory.class);
 
-  private OptimizeOpenSearchClientFactory() {
-  }
+  private OptimizeOpenSearchClientFactory() {}
 
   public static OptimizeOpenSearchClient create(
       final ConfigurationService configurationService,

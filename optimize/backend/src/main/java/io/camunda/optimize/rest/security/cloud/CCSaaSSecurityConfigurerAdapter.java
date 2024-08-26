@@ -191,7 +191,7 @@ public class CCSaaSSecurityConfigurerAdapter extends AbstractSecurityConfigurerA
 
   @Bean
   public HttpCookieOAuth2AuthorizationRequestRepository
-  cookieOAuth2AuthorizationRequestRepository() {
+      cookieOAuth2AuthorizationRequestRepository() {
     return new HttpCookieOAuth2AuthorizationRequestRepository(
         configurationService, new AuthorizationRequestCookieValueMapper());
   }

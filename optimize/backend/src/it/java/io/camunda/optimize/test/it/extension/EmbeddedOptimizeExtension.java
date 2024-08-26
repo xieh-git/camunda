@@ -78,8 +78,8 @@ public class EmbeddedOptimizeExtension
   private static final ObjectMapper configObjectMapper =
       new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module());
   private static String serializedDefaultConfiguration;
-  private static final Logger log = org.slf4j.LoggerFactory.getLogger(
-      EmbeddedOptimizeExtension.class);
+  private static final Logger log =
+      org.slf4j.LoggerFactory.getLogger(EmbeddedOptimizeExtension.class);
   private final boolean beforeAllMode;
   private ApplicationContext applicationContext;
   private OptimizeRequestExecutor requestExecutor;
@@ -149,10 +149,10 @@ public class EmbeddedOptimizeExtension
       objectMapper = getBean(ObjectMapper.class);
       requestExecutor =
           new OptimizeRequestExecutor(
-              DEFAULT_USERNAME,
-              DEFAULT_PASSWORD,
-              IntegrationTestConfigurationUtil.getEmbeddedOptimizeRestApiEndpoint(
-                  applicationContext))
+                  DEFAULT_USERNAME,
+                  DEFAULT_PASSWORD,
+                  IntegrationTestConfigurationUtil.getEmbeddedOptimizeRestApiEndpoint(
+                      applicationContext))
               .initAuthCookie();
       if (isResetImportOnStart()) {
         resetPositionBasedImportStartIndexes();

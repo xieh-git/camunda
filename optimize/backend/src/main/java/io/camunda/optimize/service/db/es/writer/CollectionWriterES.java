@@ -64,7 +64,9 @@ public class CollectionWriterES implements CollectionWriter {
   private final ObjectMapper objectMapper;
   private final DateTimeFormatter formatter;
 
-  public CollectionWriterES(OptimizeElasticsearchClient esClient, ObjectMapper objectMapper,
+  public CollectionWriterES(
+      OptimizeElasticsearchClient esClient,
+      ObjectMapper objectMapper,
       DateTimeFormatter formatter) {
     this.esClient = esClient;
     this.objectMapper = objectMapper;
