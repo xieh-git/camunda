@@ -27,7 +27,3 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
-
-
-# cluster secret store
-# vault role
