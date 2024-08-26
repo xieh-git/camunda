@@ -1,0 +1,12 @@
+git:
+  # will be set by the "deploy-preview-env" action
+  branch: preview-env-build-helmchart
+  # Defines the repository URL to use for annotating resources
+  repoUrl: https://github.com/camunda/camunda
+
+global:
+  labels:
+    camunda.cloud/source: argocd
+    camunda.cloud/managed-by: Helm
+    app: camunda-camunda-cloud  # Should be overridden by Argo app
+    team: camunda
