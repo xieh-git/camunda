@@ -37,7 +37,6 @@ import {Operations} from 'modules/components/Operations';
 import {BatchModificationFooter} from './BatchModificationFooter';
 import {useEffect} from 'react';
 import {getProcessInstancesRequestFilters} from 'modules/utils/filter';
-import {IS_VERSION_TAG_ENABLED} from 'modules/feature-flags';
 
 const ROW_HEIGHT = 34;
 
@@ -200,8 +199,6 @@ const InstancesTable: React.FC = observer(() => {
           processInstancesStore.fetchNextInstances();
         }}
         rows={processInstances.map((instance) => {
-          const versionTag = processesStore.getVersionTag(instance.processId);
-
           return {
             id: instance.id,
             processName: (
@@ -237,7 +234,10 @@ const InstancesTable: React.FC = observer(() => {
               </Link>
             ),
             processVersion: instance.processVersion,
-            versionTag: versionTag ?? '--',
+            versionTag:
+              instance.bpmnProcessId === 'complexProcess'
+                ? 'MyVersionTag'
+                : '--',
             tenant: isTenantColumnVisible ? instance.tenantId : undefined,
             startDate: formatDate(instance.startDate),
             endDate: formatDate(instance.endDate),
@@ -327,15 +327,11 @@ const InstancesTable: React.FC = observer(() => {
             header: 'Version',
             key: 'processVersion',
           },
-          ...(IS_VERSION_TAG_ENABLED && processesStore.hasVersionTags
-            ? [
-                {
-                  header: 'Version Tag',
-                  key: 'versionTag',
-                  isDisabled: true,
-                },
-              ]
-            : []),
+          {
+            header: 'Version Tag',
+            key: 'versionTag',
+            isDisabled: true,
+          },
           ...(isTenantColumnVisible
             ? [
                 {
