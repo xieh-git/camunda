@@ -299,15 +299,12 @@ jobs:
           secret_vault_address: ${{ secrets.VAULT_ADDR }}
           secret_vault_roleId: ${{ secrets.VAULT_ROLE_ID }}
       - uses: bufbuild/buf-setup-action@v1
-      - name: Change working directory to ${{ matrix.module }}
-        run: cd ${{ matrix.module }}
         # you can re-generate the file here by going to one of the modules working directory, and
         # running: `cp buf.yaml src/**/*.proto --parents .proto.lock/`
         # for example:
         # > cd zeebe/dynamic-config && cp buf.yaml src/**/*.proto --parents .proto.lock/
-      - uses: bufbuild/buf-breaking-action@v1
-        with:
-          against: '.proto.lock'
+      - run: buf breaking --against .proto.lock
+        working-directory: ${{ matrix.module }}
       - name: Observe build status
         if: always()
         continue-on-error: true
