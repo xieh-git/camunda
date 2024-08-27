@@ -71,7 +71,7 @@ global:
   ## @extra global.ingress
   ingress:
     ## @param global.ingress.enabled if true, an ingress resource is deployed. Only useful if an ingress controller is available, like Ingress-NGINX.
-    enabled: true
+    enabled: false
     ## @param global.ingress.className Ingress.className defines the class or configuration of ingress which should be used by the controller
     className: nginx
     ## @param global.ingress.annotations [object] defines the ingress related annotations, consumed mostly by the ingress controller
