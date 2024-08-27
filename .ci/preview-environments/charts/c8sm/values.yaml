@@ -2440,7 +2440,7 @@ identityKeycloak:
     adminUser: admin
     ## @param identityKeycloak.auth.existingSecret can be used to reuse an existing secret containing authentication information.
     # See https://docs.bitnami.com/kubernetes/apps/keycloak/configuration/manage-passwords/ for more details.
-    existingSecret: ""
+    existingSecret: camunda-preview-env-bui-postgresql
     secretKeys:
       userPasswordKey: postgres-password
       adminPasswordKey: postgres-password
