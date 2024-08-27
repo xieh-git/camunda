@@ -2,10 +2,6 @@
 {{- toYaml .Values.global.labels -}}
 {{ end }}
 
-{{ define "commonAnnotations" -}}
-camunda.cloud/created-by: "{{ .Values.git.repoUrl }}/blob/{{ .Values.git.branch }}/.ci/{{ .Template.Name }}"
-{{ end }}
-
 {{- define "ingress.domain" -}}
-{{- printf "%s.%s" .Release.Name .Values.ingress.domain | trimPrefix "optimize-" -}}
+{{- printf "%s.%s" .Release.Name .Values.ingress.domain | trimPrefix "camunda-" -}}
 {{- end -}}
