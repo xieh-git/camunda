@@ -55,7 +55,7 @@ jobs:
       # Setup: read java version from pom
       - name: "Read Java / Version Info"
         id: pom-info
-        uses: YunaBraska/java-info-action@72dd3fb638d774fb4353d99d2bb3fddddd084789 # 2.1.0
+        uses: YunaBraska/java-info-action@b5caaa08832514ae775f6104f0f1d933447c60eb # 2.1.4
 
       #########################################################################
       # Docker login and image tagging
