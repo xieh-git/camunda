@@ -302,9 +302,9 @@ jobs:
       - name: Change working directory to ${{ matrix.module }}
         run: cd ${{ matrix.module }}
         # you can re-generate the file here by going to one of the modules working directory, and
-        # running: `tar cvzf proto.lock.tar.gz buf.yaml src/**/*.proto`
+        # running: `cp buf.yaml src/**/*.proto --parents .proto.lock/`
         # for example:
-        # > cd zeebe/dynamic-config && tar -czf proto.lock.tar.gz buf.yaml src/**/*.proto
+        # > cd zeebe/dynamic-config && cp buf.yaml src/**/*.proto --parents .proto.lock/
       - uses: bufbuild/buf-breaking-action@v1
         with:
           against: '.proto.lock'
