@@ -10613,10 +10613,15 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lexical@0.15.0, lexical@^0.15.0:
+lexical@0.15.0:
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/lexical/-/lexical-0.15.0.tgz#1c471d7e4ad7140830bbb4cd244c4e65cfce3794"
   integrity sha512-/7HrPAmtgsc1F+qpv5bFwoQZ6CbH/w3mPPL2AW5P75/QYrqKz4bhvJrc2jozIX0GxtuT/YUYT7w+1sZMtUWbOg==
+
+lexical@^0.17.0:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/lexical/-/lexical-0.17.1.tgz#02f4057b82cb302ceb9ca9b031dcf9406be5780a"
+  integrity sha512-72/MhR7jqmyqD10bmJw8gztlCm4KDDT+TPtU4elqXrEvHoO5XENi34YAEUD9gIkPfqSwyLa9mwAX1nKzIr5xEA==
 
 license-checker@^25.0.1:
   version "25.0.1"
