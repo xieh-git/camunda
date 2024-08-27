@@ -1,7 +1,7 @@
 global:
   ingress:
     ## @param global.ingress.enabled if true, an ingress resource is deployed. Only useful if an ingress controller is available, like Ingress-NGINX.
-    enabled: false
+    enabled: true
     ## @param global.ingress.className Ingress.className defines the class or configuration of ingress which should be used by the controller
     className: nginx
     ## @param global.ingress.annotations [object] defines the ingress related annotations, consumed mostly by the ingress controller
@@ -20,3 +20,11 @@ global:
       enabled: true
       ## @param global.ingress.tls.secretName defines the secret name which contains the TLS private key and certificate
       secretName: camunda-tls
+
+
+identityKeycloak:
+  postgresql:
+    postgresqlPassword: "new-postgres-password"  # This sets the password for PostgreSQL
+  auth:
+    adminUser: "admin"
+    adminPassword: "new-keycloak-admin-password"
