@@ -128,14 +128,19 @@ public final class SearchQueryRequestMapper {
     final var builder = FilterBuilders.processInstance();
 
     if (filter != null) {
-      ofNullable(filter.getRunning()).ifPresentOrElse(builder::running, builder::running);
-      ofNullable(filter.getActive()).ifPresentOrElse(builder::active, builder::active);
-      ofNullable(filter.getIncidents()).ifPresentOrElse(builder::incidents, builder::incidents);
-      ofNullable(filter.getFinished()).ifPresentOrElse(builder::finished, builder::finished);
-      ofNullable(filter.getCompleted()).ifPresentOrElse(builder::completed, builder::completed);
-      ofNullable(filter.getCanceled()).ifPresentOrElse(builder::canceled, builder::canceled);
+      ofNullable(filter.getRunning())
+          .ifPresentOrElse(builder::running, () -> builder.running(false));
+      ofNullable(filter.getActive()).ifPresentOrElse(builder::active, () -> builder.active(false));
+      ofNullable(filter.getIncidents())
+          .ifPresentOrElse(builder::incidents, () -> builder.incidents(false));
+      ofNullable(filter.getFinished())
+          .ifPresentOrElse(builder::finished, () -> builder.finished(false));
+      ofNullable(filter.getCompleted())
+          .ifPresentOrElse(builder::completed, () -> builder.completed(false));
+      ofNullable(filter.getCanceled())
+          .ifPresentOrElse(builder::canceled, () -> builder.canceled(false));
       ofNullable(filter.getRetriesLeft())
-          .ifPresentOrElse(builder::retriesLeft, builder::retriesLeft);
+          .ifPresentOrElse(builder::retriesLeft, () -> builder.retriesLeft(false));
       ofNullable(filter.getErrorMessage()).ifPresent(builder::errorMessage);
       ofNullable(filter.getActivityId()).ifPresent(builder::activityId);
       ofNullable(toDateValueFilter(filter.getStartDate())).ifPresent(builder::startDate);

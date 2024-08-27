@@ -60,18 +60,8 @@ public record ProcessInstanceFilter(
       return this;
     }
 
-    public Builder running() {
-      running = false;
-      return this;
-    }
-
     public Builder active(final boolean active) {
       this.active = active;
-      return this;
-    }
-
-    public Builder active() {
-      active = false;
       return this;
     }
 
@@ -80,18 +70,8 @@ public record ProcessInstanceFilter(
       return this;
     }
 
-    public Builder incidents() {
-      incidents = false;
-      return this;
-    }
-
     public Builder finished(final boolean finished) {
       this.finished = finished;
-      return this;
-    }
-
-    public Builder finished() {
-      finished = false;
       return this;
     }
 
@@ -100,28 +80,13 @@ public record ProcessInstanceFilter(
       return this;
     }
 
-    public Builder completed() {
-      completed = false;
-      return this;
-    }
-
     public Builder canceled(final boolean canceled) {
       this.canceled = canceled;
       return this;
     }
 
-    public Builder canceled() {
-      canceled = false;
-      return this;
-    }
-
     public Builder retriesLeft(final boolean retriesLeft) {
       this.retriesLeft = retriesLeft;
-      return this;
-    }
-
-    public Builder retriesLeft() {
-      retriesLeft = false;
       return this;
     }
 
