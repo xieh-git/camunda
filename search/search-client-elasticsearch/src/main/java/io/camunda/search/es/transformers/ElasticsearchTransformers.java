@@ -9,6 +9,7 @@ package io.camunda.search.es.transformers;
 
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.CardinalityAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.MultiTermsAggregate;
 import io.camunda.search.clients.aggregation.SearchAggregation;
 import io.camunda.search.clients.aggregation.SearchCardinalityAggregation;
 import io.camunda.search.clients.aggregation.SearchTermsAggregation;
@@ -36,6 +37,7 @@ import io.camunda.search.es.transformers.aggregation.CardinalityAggregateTransfo
 import io.camunda.search.es.transformers.aggregation.CardinalityAggregationTransformer;
 import io.camunda.search.es.transformers.aggregation.SearchAggregateTransformer;
 import io.camunda.search.es.transformers.aggregation.SearchAggregationTransformer;
+import io.camunda.search.es.transformers.aggregation.TermsAggregateTransformer;
 import io.camunda.search.es.transformers.aggregation.TermsAggregationTransformer;
 import io.camunda.search.es.transformers.query.BoolQueryTransformer;
 import io.camunda.search.es.transformers.query.ConstantScoreQueryTransformer;
@@ -114,5 +116,6 @@ public final class ElasticsearchTransformers {
     // aggregates
     mappers.put(Aggregate.class, new SearchAggregateTransformer(mappers));
     mappers.put(CardinalityAggregate.class, new CardinalityAggregateTransformer(mappers));
+    mappers.put(MultiTermsAggregate.class, new TermsAggregateTransformer(mappers));
   }
 }
