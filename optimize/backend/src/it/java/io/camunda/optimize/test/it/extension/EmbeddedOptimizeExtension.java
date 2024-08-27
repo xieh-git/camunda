@@ -241,7 +241,7 @@ public class EmbeddedOptimizeExtension
     try {
       scheduler.runImportRound(true).get();
     } catch (final InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -261,8 +261,8 @@ public class EmbeddedOptimizeExtension
           .orElseThrow(() -> new OptimizeIntegrationTestException("No Zeebe Scheduler present"))
           .runImportRound(true)
           .get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new RuntimeException(e);
+    } catch (final InterruptedException | ExecutionException e) {
+      throw new OptimizeRuntimeException(e);
     }
   }
 
@@ -491,8 +491,8 @@ public class EmbeddedOptimizeExtension
   public String toJsonString(final Object object) {
     try {
       return getObjectMapper().writeValueAsString(object);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+    } catch (final JsonProcessingException e) {
+      throw new OptimizeRuntimeException(e);
     }
   }
 

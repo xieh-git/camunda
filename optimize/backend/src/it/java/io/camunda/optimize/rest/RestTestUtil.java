@@ -7,7 +7,7 @@
  */
 package io.camunda.optimize.rest;
 
-import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
+import io.camunda.optimize.exception.OptimizeIntegrationTestException;
 import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class RestTestUtil {
       final byte[] result = getResponseContentAsByteArray(response);
       return new String(result);
     } catch (final IOException e) {
-      throw new OptimizeRuntimeException(e);
+      throw new OptimizeIntegrationTestException(e);
     }
   }
 
