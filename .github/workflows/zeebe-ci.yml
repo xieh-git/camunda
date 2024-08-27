@@ -282,6 +282,41 @@ jobs:
           secret_vault_secretId: ${{ secrets.VAULT_SECRET_ID }}
           secret_vault_address: ${{ secrets.VAULT_ADDR }}
           secret_vault_roleId: ${{ secrets.VAULT_ROLE_ID }}
+  protobuf-checks:
+    name: "Protobuf Backwards Compatibility: [${{ matrix.module }}]"
+    timeout-minutes: 25
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module: [ zeebe/dynamic-config, zeebe/gateway-protocol ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-zeebe
+        with:
+          java: false
+          secret_vault_secretId: ${{ secrets.VAULT_SECRET_ID }}
+          secret_vault_address: ${{ secrets.VAULT_ADDR }}
+          secret_vault_roleId: ${{ secrets.VAULT_ROLE_ID }}
+      - uses: bufbuild/buf-setup-action@v1
+      - name: Change working directory to ${{ matrix.module }}
+        run: cd ${{ matrix.module }}
+        # you can re-generate the file here by going to one of the modules working directory, and
+        # running: `tar cvzf proto.lock.tar.gz buf.yaml src/**/*.proto`
+        # for example:
+        # > cd zeebe/dynamic-config && tar -czf proto.lock.tar.gz buf.yaml src/**/*.proto
+      - uses: bufbuild/buf-breaking-action@v1
+        with:
+          against: 'proto.lock.tar.gz'
+      - name: Observe build status
+        if: always()
+        continue-on-error: true
+        uses: ./.github/actions/observe-build-status
+        with:
+          build_status: ${{ contains(steps.*.conclusion, 'failure') && 'failure' || 'success' }}
+          secret_vault_secretId: ${{ secrets.VAULT_SECRET_ID }}
+          secret_vault_address: ${{ secrets.VAULT_ADDR }}
+          secret_vault_roleId: ${{ secrets.VAULT_ROLE_ID }}
   docker-checks:
     name: Docker checks
     runs-on: ubuntu-latest
