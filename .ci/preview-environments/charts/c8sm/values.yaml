@@ -24,4 +24,6 @@ global:
 identityKeycloak:
   postgresql:
     auth:
-      postgresPassword: "1234"
+      existingSecret: "andreas-secret"
+      secretKeys:
+        userPasswordKey: "password"
