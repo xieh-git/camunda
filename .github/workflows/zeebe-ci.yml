@@ -283,13 +283,13 @@ jobs:
           secret_vault_address: ${{ secrets.VAULT_ADDR }}
           secret_vault_roleId: ${{ secrets.VAULT_ROLE_ID }}
   protobuf-checks:
-    name: "Protobuf Backwards Compatibility: [${{ matrix.module }}]"
+    name: "Protobuf Backwards Compatibility: [${{ matrix.proto-dir }}]"
     timeout-minutes: 25
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        module: [ zeebe/dynamic-config, zeebe/gateway-protocol ]
+        proto-dir: [ zeebe/dynamic-config/src/main/resources/proto, zeebe/gateway-protocol/src/main/proto ]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-zeebe
@@ -299,12 +299,10 @@ jobs:
           secret_vault_address: ${{ secrets.VAULT_ADDR }}
           secret_vault_roleId: ${{ secrets.VAULT_ROLE_ID }}
       - uses: bufbuild/buf-setup-action@v1
-        # you can re-generate the file here by going to one of the modules working directory, and
-        # running: `cp buf.yaml src/**/*.proto --parents .proto.lock/`
-        # for example:
-        # > cd zeebe/dynamic-config && cp buf.yaml src/**/*.proto --parents .proto.lock/
-      - run: buf breaking --against .proto.lock
-        working-directory: ${{ matrix.module }}
+      - uses: bufbuild/buf-breaking-action@v1
+        with:
+          input: ${{ matrix.proto-dir }}
+          against: '.git#branch=${{ github.base_ref || github.event.merge_group.base_ref }},subdir=${{ matrix.proto-dir }}'
       - name: Observe build status
         if: always()
         continue-on-error: true

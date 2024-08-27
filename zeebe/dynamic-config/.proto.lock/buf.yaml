@@ -1,8 +1,0 @@
-version: v2
-modules:
-  - path: src/main/resources/proto
-breaking:
-  # As this is meant for internal usage only, we only care about breaking changes
-  # across the wire, not source breaking changes (we can handle source code changes)
-  use:
-    - WIRE
