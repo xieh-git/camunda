@@ -2442,10 +2442,9 @@ identityKeycloak:
     # See https://docs.bitnami.com/kubernetes/apps/keycloak/configuration/manage-passwords/ for more details.
     existingSecret: ""
     secretKeys:
-      userPasswordKey: postgresql-secret
-      adminPasswordKey: postgresql-secret
-      replicationPasswordKey: postgresql-secret
-
+      userPasswordKey: camunda-preview-env-bui-postgresql
+      adminPasswordKey: camunda-preview-env-bui-postgresql
+      replicationPasswordKey: camunda-preview-env-bui-postgresql
 
 #######################################################################
 #     #               #     #
