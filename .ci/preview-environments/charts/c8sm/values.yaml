@@ -2441,6 +2441,10 @@ identityKeycloak:
     ## @param identityKeycloak.auth.existingSecret can be used to reuse an existing secret containing authentication information.
     # See https://docs.bitnami.com/kubernetes/apps/keycloak/configuration/manage-passwords/ for more details.
     existingSecret: ""
+    secretKeys:
+      userPasswordKey: postgresql-secret
+      adminPasswordKey: postgresql-secret
+      replicationPasswordKey: postgresql-secret
 
 
 #######################################################################
