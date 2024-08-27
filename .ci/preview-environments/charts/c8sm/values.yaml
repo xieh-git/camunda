@@ -55,10 +55,7 @@ global:
   annotations: {}
   labels:
   ## @param global.labels.app Name of the application
-    camunda.cloud/source: argocd
-    camunda.cloud/managed-by: Helm
-    app: camunda-camunda-cloud  # Should be overridden by Argo app
-    team: camunda
+    app: camunda-platform
   # Image configuration to be used in each sub chart
   # https://hub.docker.com/u/camunda
   image:
@@ -74,25 +71,26 @@ global:
   ## @extra global.ingress
   ingress:
     ## @param global.ingress.enabled if true, an ingress resource is deployed. Only useful if an ingress controller is available, like Ingress-NGINX.
-    enabled: true
+    enabled: false
     ## @param global.ingress.className Ingress.className defines the class or configuration of ingress which should be used by the controller
     className: nginx
     ## @param global.ingress.annotations [object] defines the ingress related annotations, consumed mostly by the ingress controller
     annotations:
       ingress.kubernetes.io/rewrite-target: "/"
-      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
     # Ingress.host can be used to define the host of the ingress rule. https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
     ## @param global.ingress.host If not specified the rules applies to all inbound http traffic, if specified the rule applies to that host.
-    host: "camunda-preview-env-bui.camunda.camunda.cloud"
+    host: ""
     ## @param global.ingress.pathType can be used to define the Ingress path type. https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types
     pathType: Prefix
     ## @extra global.ingress.tls configuration for tls on the ingress resource https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
     tls:
       ## @param global.ingress.tls.enabled if true, then tls is configured on the ingress resource. If enabled the Ingress.host need to be defined.
-      enabled: true
+      enabled: false
       ## @param global.ingress.tls.secretName defines the secret name which contains the TLS private key and certificate
-      secretName: camunda-tls
+      secretName: camunda-platform
+
   # Elasticsearch configuration which is shared between the sub charts
   ## @extra global.elasticsearch
   ## @param global.elasticsearch.enabled if true, enables elasticsearch for all components
@@ -216,7 +214,7 @@ global:
       #  defines the token issuer (Keycloak) URL, where the services can request JWT tokens.
       # Should be publicly accessible, per default we assume a port-forward to Keycloak (18080) is created before login.
       ## @param global.identity.auth.publicIssuerUrl Can be overwritten if ingress is in use and an external IP is available.
-      publicIssuerUrl: "https://camunda-preview-env-bui.camunda.camunda.cloud/auth/realms/camunda-platform"
+      publicIssuerUrl: "http://localhost:18080/auth/realms/camunda-platform"
 
       ## @extra global.identity.auth.connectors configuration to configure Connectors authentication specifics on global level, which can be accessed by other sub-charts
       connectors:
@@ -225,7 +223,6 @@ global:
         ## @param global.identity.auth.connectors.existingSecret can be used to use an own existing secret. If not set a random secret is generated.
         # The existing secret should contain an `connectors-secret` field, which will be used as secret for the identity-Connectors communication.
         existingSecret:
-        redirectUrl: "https://camunda-preview-env-bui.camunda.camunda.cloud/connectors"
 
       ## @extra global.identity.auth.identity configuration to configure Identity authentication specifics on global level, which can be accessed by other sub-charts
       identity:
@@ -258,7 +255,7 @@ global:
         ## @param global.identity.auth.operate.redirectUrl defines the redirect URL, which is used by Keycloak to access Operate.
         # Should be publicly accessible, the default value works if a port-forward to Operate is created to 8081.
         # Can be overwritten if ingress is in use and an external IP is available.
-        redirectUrl: "https://camunda-preview-env-bui.camunda.camunda.cloud/operate"
+        redirectUrl: "http://localhost:8081"
 
       ## @extra global.identity.auth.tasklist configuration to configure Tasklist authentication specifics on global level, which can be accessed by other sub-charts
       tasklist:
@@ -272,7 +269,7 @@ global:
         ## @param global.identity.auth.tasklist.redirectUrl defines the root (or redirect) URL, which is used by Keycloak to access Tasklist.
         # Should be publicly accessible, the default value works if a port-forward to Tasklist is created to 8082.
         # Can be overwritten if ingress is in use and an external IP is available.
-        redirectUrl: "https://camunda-preview-env-bui.camunda.camunda.cloud/tasklist"
+        redirectUrl: "http://localhost:8082"
 
       ## @extra global.identity.auth.optimize configuration to configure Optimize authentication specifics on global level, which can be accessed by other sub-charts
       optimize:
@@ -286,7 +283,7 @@ global:
         ## @param global.identity.auth.optimize.redirectUrl defines the root (or redirect) URL, which is used by Keycloak to access Optimize.
         # Should be publicly accessible, the default value works if a port-forward to Optimize is created to 8083.
         # Can be overwritten if ingress is in use and an external IP is available.
-        redirectUrl: "https://camunda-preview-env-bui.camunda.camunda.cloud/optimize"
+        redirectUrl: "http://localhost:8083"
 
       ## @extra global.identity.auth.webModeler configuration to configure WebModeler authentication specifics on global level, which can be accessed by other sub-charts
       webModeler:
@@ -299,7 +296,7 @@ global:
         ## @param global.identity.auth.webModeler.redirectUrl defines the root URL which is used by Keycloak to access WebModeler.
         # Should be publicly accessible, the default value works if a port-forward to WebModeler is created to 8084.
         # Can be overwritten if ingress is in use and an external IP is available.
-        redirectUrl: "https://camunda-preview-env-bui.camunda.camunda.cloud/modeler"
+        redirectUrl: "http://localhost:8084"
 
       ## @extra global.identity.auth.console configuration to configure Console authentication specifics on global level, which can be accessed by other sub-charts
       console:
@@ -315,7 +312,7 @@ global:
         ## @param global.identity.auth.console.redirectUrl defines the root URL which is used by Keycloak to access WebModeler.
         # Should be publicly accessible, the default value works if a port-forward to WebModeler is created to 8080.
         # Can be overwritten if ingress is in use and an external IP is available.
-        redirectUrl: "https://camunda-preview-env-bui.camunda.camunda.cloud/console"
+        redirectUrl: "http://localhost:8080"
 
       ## @extra global.identity.auth.zeebe configuration to configure Zeebe authentication specifics on global level, which can be accessed by other sub-charts
       zeebe:
@@ -386,7 +383,7 @@ console:
     realm: "camunda-platform"
 
   ## @param console.contextPath can be used to make Console web application works on a custom sub-path. This is mainly used to run Camunda web applications under a single domain.
-  contextPath: "/console"
+  contextPath: ""
 
   ## @param console.initContainers can be used to set up extra init containers for the application Pod
   initContainers: []
@@ -1136,7 +1133,7 @@ zeebeGateway:
       pathType: Prefix
       ## @param zeebeGateway.ingress.grpc.host can be used to define the host of the ingress rule. https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
       # If not specified the rules applies to all inbound gRPC traffic, if specified the rule applies to that host.
-      host: "zeebe.camunda.example.com"
+      host: ""
       ## @extra zeebeGateway.ingress.grpc.tls configuration for tls on the ingress resource https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
       tls:
         ## @param zeebeGateway.ingress.grpc.tls.enabled if true, then tls is configured on the ingress resource. If enabled the Ingress.host need to be defined.
@@ -1174,7 +1171,7 @@ zeebeGateway:
 
   # contextPath: "/zeebe"
   ## @param zeebeGateway.contextPath can be used to make Zeebe web application works on a custom sub-path. This is mainly used to run Camunda web applications under a single domain.
-  contextPath: "/zeebe"
+  contextPath: ""
 
   ## @param zeebeGateway.configuration if specified, contents will be used as the application.yaml
   configuration: ""
@@ -1237,7 +1234,7 @@ operate:
   initContainers: []
   # contextPath: "/operate"
   ## @param operate.contextPath can be used to make Operate web application works on a custom sub-path. This is mainly used to run Camunda web applications under a single domain.
-  contextPath: "/operate"
+  contextPath: ""
 
   ## @param operate.podAnnotations can be used to define extra Operate pod annotations
   podAnnotations: {}
@@ -1476,7 +1473,7 @@ tasklist:
   initContainers: []
   # contextPath: "/tasklist"
   ## @param tasklist.contextPath can be used to make Tasklist web application works on a custom sub-path. This is mainly used to run Camunda web applications under a single domain.
-  contextPath: "/tasklist"
+  contextPath: ""
 
   ## @param tasklist.env can be used to set extra environment variables on each Tasklist container
   env: []
@@ -1732,7 +1729,7 @@ optimize:
 
   # contextPath: "/optimize"
   ## @param optimize.contextPath can be used to make Optimize web application works on a custom sub-path. This is mainly used to run Camunda web applications under a single domain.
-  contextPath: "/optimize"
+  contextPath: ""
 
   ## @extra optimize.configMap configuration which will be applied to the mounted config map.
   configMap:
@@ -1991,14 +1988,14 @@ identity:
   ## @param identity.initContainers can be used to set up extra init containers for the application Pod
   initContainers: []
   ## @param identity.fullURL can be used when Ingress is configured (for both multi and single domain setup).
-  fullURL: "https://camunda-preview-env-bui.camunda.camunda.cloud/identity"
+  fullURL: ""
 
   # Note: Identity cannot be accessed over HTTP if a "contextPath" is configured.
   #       Which means that Identity cannot be configured in combined Ingress without HTTPS.
   #       To use Identity over HTTP, setup a separated Ingress using "identity.ingress" and don't set "contextPath".
   # contextPath: "/identity"
   ## @param identity.contextPath can be used to make Identity web application works on a custom sub-path. This is mainly used to run Camunda web applications under a single domain.
-  contextPath: "/identity"
+  contextPath: ""
 
   ## @param identity.podAnnotations can be used to define extra Identity pod annotations
   podAnnotations: {}
@@ -2433,12 +2430,9 @@ identityKeycloak:
     ## @param identityKeycloak.auth.adminUser defines the keycloak administrator user
     adminUser: admin
     ## @param identityKeycloak.auth.existingSecret can be used to reuse an existing secret containing authentication information.
-    # See https://docs.bitnami.com/kubernetes/apps/keycloak/configuration/manage-passwords/ for more details. kf
+    # See https://docs.bitnami.com/kubernetes/apps/keycloak/configuration/manage-passwords/ for more details.
     existingSecret: ""
-    secretKeys:
-      userPasswordKey: "MlVDTDJuMGs5eg=="
-      adminPasswordKey: "MlVDTDJuMGs5eg=="
-      replicationPasswordKey: "MlVDTDJuMGs5eg=="
+
 
 #######################################################################
 #     #               #     #
@@ -2482,7 +2476,7 @@ webModeler:
   # Note: The WebSocket application will be exposed on the configured path suffixed with "-ws", e.g. "/modeler-ws"
   # contextPath: "/modeler"
   ## @param webModeler.contextPath can be used to make WebModeler available on a custom sub-path. This is mainly used to run the Camunda web applications under a single domain.
-  contextPath: "/modeler"
+  contextPath: ""
 
   # WebModeler.
   ######                         #    ######  ###
@@ -3201,7 +3195,7 @@ connectors:
 
   # contextPath: "/connectors"
   ## @param connectors.contextPath can be used to make Connectors web application works on a custom sub-path. This is mainly used to run Camunda web applications under a single domain.
-  contextPath: "/connectors"
+  contextPath: ""
 
   ## @param connectors.podAnnotations can be used to define extra Connectors pod annotations
   podAnnotations: {}
