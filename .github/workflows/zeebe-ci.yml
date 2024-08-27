@@ -307,7 +307,7 @@ jobs:
         # > cd zeebe/dynamic-config && tar -czf proto.lock.tar.gz buf.yaml src/**/*.proto
       - uses: bufbuild/buf-breaking-action@v1
         with:
-          against: 'proto.lock.tar.gz'
+          against: '.proto.lock'
       - name: Observe build status
         if: always()
         continue-on-error: true

@@ -1,0 +1,8 @@
+version: v2
+modules:
+  - path: src/main/proto
+breaking:
+  # As this is meant for consumption and client code generation usage only, we should avoid breaking
+  # the source code as well
+  use:
+    - FILE
